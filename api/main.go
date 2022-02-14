@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"os"
 
 	"encoding/json"
 
@@ -12,8 +13,10 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
+
 func listImages() []string {
-	files, err := ioutil.ReadDir("/tmp/")
+	fmt.Printf("%s/images\n", os.Getenv("REACT_PUBLIC_DIRECTORY"))
+	files, err := ioutil.ReadDir(fmt.Sprintf("%s/images", os.Getenv("REACT_PUBLIC_DIRECTORY")))
     if err != nil {
         log.Fatal(err)
     }
@@ -32,12 +35,12 @@ func AllImages(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Fprint(w, jsonData)
+	fmt.Fprint(w, string(jsonData))
 }
 
 func main() {
 	router := httprouter.New()
-	router.GET("/admin", AllImages)
+	router.GET("/api/images", AllImages)
 
 	log.Fatal(http.ListenAndServe(":8080", router))
 }
