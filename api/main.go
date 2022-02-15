@@ -11,6 +11,7 @@ import (
 	"net/http"
 
 	"github.com/julienschmidt/httprouter"
+	"github.com/rs/cors"
 )
 
 
@@ -41,6 +42,7 @@ func AllImages(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 func main() {
 	router := httprouter.New()
 	router.GET("/api/images", AllImages)
+	handler := cors.Default().Handler(router)
 
-	log.Fatal(http.ListenAndServe(":8080", router))
+	log.Fatal(http.ListenAndServe(":8080", handler))
 }
