@@ -10,9 +10,9 @@ import (
 
 	"net/http"
 
+	"github.com/joho/godotenv"
 	"github.com/julienschmidt/httprouter"
 	"github.com/rs/cors"
-	"github.com/joho/godotenv"
 )
 
 
@@ -53,6 +53,37 @@ func DeleteImage(w http.ResponseWriter, r*http.Request, ps httprouter.Params) {
 	}
 }
 
+func UploadFile(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+
+    // Parse our multipart form, 10 << 20 specifies a maximum
+    // upload of 10 MB files.
+    r.ParseMultipartForm(10 << 20)
+    // FormFile returns the first file for the given key `myFile`
+    // it also returns the FileHeader so we can get the Filename,
+    // the Header and the size of the file
+    file, handler, err := r.FormFile("image")
+    if err != nil {
+        log.Fatal(err)
+        return
+    }
+    defer file.Close()
+
+	filename := handler.Filename
+
+    // read all of the contents of our uploaded file into a
+    // byte array
+    fileBytes, err := ioutil.ReadAll(file)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+	err = ioutil.WriteFile(fmt.Sprintf("%s/images/%s", os.Getenv("REACT_PUBLIC_DIRECTORY"), filename), fileBytes, 0644) 
+	
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
 func main() {	
 	err := godotenv.Load()
 	if err != nil {
@@ -61,7 +92,10 @@ func main() {
 	router := httprouter.New()
 	router.GET("/api/images", AllImages)
 	router.GET("/api/delete/:filename", DeleteImage)
+	router.POST("/api/upload", UploadFile)
 	handler := cors.Default().Handler(router)
+
+	log.Println("Server running on port 8080")
 
 	log.Fatal(http.ListenAndServe(":8080", handler))
 }
