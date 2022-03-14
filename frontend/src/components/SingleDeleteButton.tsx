@@ -42,7 +42,7 @@ export default function SingleDeleteButton({ imageName }: Props) {
                 setDialogOpen(false);
                 axios
                   .get(`/api/delete/${imageName}`)
-                  .then((response) => navigate("/", { replace: true }));
+                  .then((response) => navigate("/admin", { replace: true }));
               }}
               className="flex items-center justify-center gap-2 border rounded-md w-fit px-2.5 py-1.5 lg:border-2 border-emerald-500 text-emerald-500 hover:bg-emerald-500 hover:text-gray-900"
             >
