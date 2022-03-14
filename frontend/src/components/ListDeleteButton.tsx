@@ -4,7 +4,7 @@ import { Dialog } from "@headlessui/react";
 import { CheckIcon, XIcon } from "@heroicons/react/outline";
 import axios from "axios";
 
-export default function DeleteButton({
+export default function ListDeleteButton({
   image,
   removeImage,
 }: {

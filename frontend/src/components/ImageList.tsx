@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import DeleteButton from "./DeleteButton";
+import ListDeleteButton from "./ListDeleteButton";
 
 const { REACT_APP_SERVER_IP } = process.env;
 
@@ -56,7 +56,10 @@ export default function ImageList() {
                   </td>
                   <td className="px-2 py-2 text-center lg:px-6 lg:py-4">
                     <div className="inline-block">
-                      <DeleteButton image={image} removeImage={removeImage} />
+                      <ListDeleteButton
+                        image={image}
+                        removeImage={removeImage}
+                      />
                     </div>
                   </td>
                 </tr>
