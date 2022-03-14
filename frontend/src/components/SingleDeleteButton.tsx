@@ -1,16 +1,18 @@
 import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { TrashIcon } from "@heroicons/react/outline";
 import { Dialog } from "@headlessui/react";
 import { CheckIcon, XIcon } from "@heroicons/react/outline";
 import axios from "axios";
 
-export default function SingleDeleteButton() {
+interface Props {
+  imageName: string;
+}
+
+export default function SingleDeleteButton({ imageName }: Props) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const { REACT_APP_SERVER_IP } = process.env;
   axios.defaults.baseURL = `http://${REACT_APP_SERVER_IP}:8080`;
-  const params = useParams();
-  const imageName = params.imagename;
   const navigate = useNavigate();
   return (
     <>
