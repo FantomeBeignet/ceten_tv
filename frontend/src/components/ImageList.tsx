@@ -50,7 +50,7 @@ export default function ImageList() {
                     </Link>
                   </td>
                   <td className="w-10 px-2 py-2 text-xs text-left text-white truncate lg:text-2xl lg:px-6 lg:py-4">
-                    <Link to={`/admin/${image}`}>
+                    <Link to={`/admin/images/${image}`}>
                       <span>{image}</span>
                     </Link>
                   </td>
