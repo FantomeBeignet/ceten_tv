@@ -7,11 +7,12 @@ import Image from "../components/Image";
 export default function SingleImagePage() {
   const params = useParams();
   const imageName = params.imagename as string;
+  const displayName = imageName.split(".")[0];
   return (
     <>
       <Navbar />
       <TopButtonBar
-        text={imageName}
+        text={displayName}
         button={SingleDeleteButton({ imageName: imageName })}
       />
       <Image imageName={imageName} />
