@@ -42,7 +42,7 @@ export default function ImageList() {
                   className="hover:bg-slate-700 border-y-2 border-slate-700"
                 >
                   <td className="relative w-4/12 px-2 py-2 lg:px-6 lg:py-4">
-                    <Link to={`/admin/${image}`}>
+                    <Link to={`/admin/images/${image}`}>
                       <img
                         src={require(`../../public/images/${image}`)}
                         alt={image}
