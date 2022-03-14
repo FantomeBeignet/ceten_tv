@@ -4,13 +4,12 @@ import { Dialog } from "@headlessui/react";
 import { CheckIcon, XIcon } from "@heroicons/react/outline";
 import axios from "axios";
 
-export default function ListDeleteButton({
-  image,
-  removeImage,
-}: {
+interface Props {
   image: string;
-  removeImage: (image: string) => void;
-}) {
+  removeImage: (imge: string) => void;
+}
+
+export default function ListDeleteButton({ image, removeImage }: Props) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const { REACT_APP_SERVER_IP } = process.env;
   axios.defaults.baseURL = `http://${REACT_APP_SERVER_IP}:8080`;
