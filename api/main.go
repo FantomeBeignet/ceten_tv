@@ -36,10 +36,11 @@ func AllImages(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	if err != nil {
 		log.Fatal(err)
 	}
+	log.Println("Requested image list")
 	fmt.Fprint(w, string(jsonData))
 }
 
-func DeleteImage(w http.ResponseWriter, r*http.Request, ps httprouter.Params) {
+func DeleteImage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	filename := ps.ByName("filename")
 	_, err := os.Stat(fmt.Sprintf("%s/images/%s", os.Getenv("REACT_PUBLIC_DIRECTORY"), filename))
 	if err != nil {
@@ -47,8 +48,9 @@ func DeleteImage(w http.ResponseWriter, r*http.Request, ps httprouter.Params) {
 	} else {
 		err := os.Rename(fmt.Sprintf("%s/images/%s", os.Getenv("REACT_PUBLIC_DIRECTORY"), filename), fmt.Sprintf("%s/images/old/%s", os.Getenv("REACT_PUBLIC_DIRECTORY"), filename))
 		if err == nil {
-			json, _ := json.MarshalIndent(map[string]bool{"ok": true}, "", "\t")
-			fmt.Print(w, string(json))
+			json, _ := json.MarshalIndent(map[string]bool{filename: true}, "", "\t")
+			w.Header().Set("Content-Type", "application/json")
+			fmt.Fprint(w, string(json))
 		}
 	}
 }
