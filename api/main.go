@@ -48,9 +48,10 @@ func DeleteImage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	} else {
 		err := os.Rename(fmt.Sprintf("%s/images/%s", os.Getenv("REACT_PUBLIC_DIRECTORY"), filename), fmt.Sprintf("%s/images/old/%s", os.Getenv("REACT_PUBLIC_DIRECTORY"), filename))
 		if err == nil {
-			json, _ := json.MarshalIndent(map[string]bool{filename: true}, "", "\t")
+			json, _ := json.MarshalIndent(map[string]string{filename: "ok"}, "", "\t")
 			w.Header().Set("Content-Type", "application/json")
 			fmt.Fprint(w, string(json))
+			log.Printf("Deleted image %s", filename)
 		}
 	}
 }
@@ -84,6 +85,10 @@ func UploadFile(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	if err != nil {
 		log.Fatal(err)
 	}
+	log.Printf("Uploaded image %s", filename)
+	json, _ := json.MarshalIndent(map[string]string{filename: "ok"}, "", "\t")
+	w.Header().Set("Content-Type", "application/json")
+	fmt.Fprint(w, string(json))
 }
 
 func main() {	
