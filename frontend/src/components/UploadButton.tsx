@@ -1,20 +1,20 @@
 import { UploadIcon } from "@heroicons/react/outline";
 import axios from "axios";
 
-const uploadImage = async (event: any) => {
+const uploadImage = async (event: any, addImage: (image: string) => void) => {
   const { REACT_APP_SERVER_IP } = process.env;
   if (event.target.files && event.target.files[0]) {
     var image = event.target.files[0];
     const body = new FormData();
-    console.log(image);
     body.append("image", image);
-    console.log(body.get("image"));
     axios.defaults.baseURL = `http://${REACT_APP_SERVER_IP}:8080`;
-    axios.post("/api/upload", body, {});
+    axios.post("/api/upload", body, {}).then((response) => {
+      addImage(image.name);
+    });
   }
 };
 
-export default function UploadButton() {
+export default function UploadButton(addImage: (image: string) => void) {
   return (
     <>
       <label
@@ -29,7 +29,7 @@ export default function UploadButton() {
         name="image"
         className="hidden"
         accept="image/*"
-        onChange={uploadImage}
+        onChange={(e) => uploadImage(e, addImage)}
       />
     </>
   );

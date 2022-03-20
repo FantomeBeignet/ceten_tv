@@ -2,11 +2,13 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import ListDeleteButton from "./ListDeleteButton";
+import TopButtonBar from "./TopButtonBar";
+import UploadButton from "./UploadButton";
 
 const { REACT_APP_SERVER_IP } = process.env;
 
 export default function ImageList() {
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useState<string[]>([]);
 
   function removeImage(image: string) {
     setImages(
@@ -16,16 +18,20 @@ export default function ImageList() {
     );
   }
 
+  function addImage(image: string) {
+    setImages([...images, image]);
+  }
+
   useEffect(() => {
     axios.defaults.baseURL = `http://${REACT_APP_SERVER_IP}:8080`;
     axios.get("/api/images").then((response) => {
-      console.log(response.data);
       setImages(response.data);
     });
   }, []);
 
   return (
     <>
+      <TopButtonBar text="Images" button={UploadButton(addImage)} />
       <div className="flex flex-col items-center justify-center w-11/12 mx-auto lg:w-8/12">
         <table className="w-full">
           <thead className="text-sm text-left text-white border-t border-b-2 lg:text-2xl lg:border-b-4 lg:border-t-2 border-slate-700">
