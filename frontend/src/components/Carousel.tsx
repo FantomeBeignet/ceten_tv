@@ -1,13 +1,19 @@
 import { useEffect, useState } from "react";
+import { Transition } from "@headlessui/react";
 import axios from "axios";
 
 const { REACT_APP_SERVER_IP } = process.env;
 const INTERVAL = 8000;
 
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 export default function Carousel() {
   const [loading, setLoading] = useState(true);
   const [images, setImages] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isImageShowing, setImageShowing] = useState(true);
 
   function fetchImages() {
     axios.defaults.baseURL = `http://${REACT_APP_SERVER_IP}:8080`;
@@ -22,7 +28,11 @@ export default function Carousel() {
       fetchImages();
     }
     const interval = setInterval(() => {
-      setCurrentIndex((currentIndex + 1) % images.length);
+      setImageShowing(false);
+      sleep(300).then(() => {
+        setCurrentIndex((currentIndex + 1) % images.length);
+        setImageShowing(true);
+      });
     }, INTERVAL);
     return () => clearInterval(interval);
   }, [currentIndex, images.length]);
@@ -32,13 +42,23 @@ export default function Carousel() {
       {loading ? (
         <></>
       ) : (
-        <div key={currentIndex} className="flex items-center justify-center">
+        <Transition
+          appear={true}
+          show={isImageShowing}
+          enter="transition-opacity ease-linear duration-200"
+          enterFrom="opacity-20"
+          enterTo="opacity-100"
+          leave="transition-opacity ease-linear duration-200"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-20"
+          className="flex items-center justify-center"
+        >
           <img
             src={require(`../../public/images/${images[currentIndex]}`)}
             alt=""
             className="relative w-full h-full"
           />
-        </div>
+        </Transition>
       )}
     </>
   );
