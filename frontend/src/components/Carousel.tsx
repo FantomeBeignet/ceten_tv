@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Transition } from "@headlessui/react";
 import axios from "axios";
 
@@ -43,6 +43,7 @@ export default function Carousel() {
         <></>
       ) : (
         <Transition
+          as={Fragment}
           appear={true}
           show={isImageShowing}
           enter="transition-opacity ease-linear duration-200"
@@ -51,7 +52,6 @@ export default function Carousel() {
           leave="transition-opacity ease-linear duration-200"
           leaveFrom="opacity-100"
           leaveTo="opacity-20"
-          className="flex items-center justify-center"
         >
           <img
             src={require(`../../public/images/${images[currentIndex]}`)}
