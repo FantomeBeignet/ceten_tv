@@ -37,6 +37,15 @@ export default function ListDeleteButton({ image, removeImage }: Props) {
           </Dialog.Description>
           <div className="flex items-center justify-end gap-8">
             <button
+              onClick={() => setDialogOpen(false)}
+              className="flex items-center justify-center gap-2 text-red-600 border border-red-600 rounded-md w-fit px-2.5 py-1.5 lg:border-2 hover:bg-red-600 hover:text-gray-900"
+            >
+              <p className="hidden text-sm md:block md:text-base lg:text-lg">
+                Annuler
+              </p>
+              <XIcon className="w-5 h-5 lg:h-6 lg:w-6" />
+            </button>
+            <button
               onClick={() => {
                 removeImage(image);
                 setDialogOpen(false);
@@ -48,15 +57,6 @@ export default function ListDeleteButton({ image, removeImage }: Props) {
                 Confirmer
               </p>
               <CheckIcon className="w-5 h-5 lg:h-6 lg:w-6" />
-            </button>
-            <button
-              onClick={() => setDialogOpen(false)}
-              className="flex items-center justify-center gap-2 text-red-600 border border-red-600 rounded-md w-fit px-2.5 py-1.5 lg:border-2 hover:bg-red-600 hover:text-gray-900"
-            >
-              <p className="hidden text-sm md:block md:text-base lg:text-lg">
-                Annuler
-              </p>
-              <XIcon className="w-5 h-5 lg:h-6 lg:w-6" />
             </button>
           </div>
         </Dialog>
