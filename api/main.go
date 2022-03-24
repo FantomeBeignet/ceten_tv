@@ -16,8 +16,8 @@ import (
 )
 
 
-func listImages() []string {
-	files, err := ioutil.ReadDir(fmt.Sprintf("%s/images", os.Getenv("REACT_PUBLIC_DIRECTORY")))
+func ListImages() []string {
+	files, err := ioutil.ReadDir("../images")
     if err != nil {
         log.Fatal(err)
     }
@@ -31,7 +31,7 @@ func listImages() []string {
 }
 
 func AllImages(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	imageList := listImages()
+	imageList := ListImages()
 	jsonData, err := json.MarshalIndent(imageList, "", "\t")
 	if err != nil {
 		log.Fatal(err)
@@ -42,11 +42,11 @@ func AllImages(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 func DeleteImage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	filename := ps.ByName("filename")
-	_, err := os.Stat(fmt.Sprintf("%s/images/%s", os.Getenv("REACT_PUBLIC_DIRECTORY"), filename))
+	_, err := os.Stat(fmt.Sprintf("../images/%s", filename))
 	if err != nil {
 		http.Error(w, "The file does not exist", http.StatusNotFound)
 	} else {
-		err := os.Rename(fmt.Sprintf("%s/images/%s", os.Getenv("REACT_PUBLIC_DIRECTORY"), filename), fmt.Sprintf("%s/images/old/%s", os.Getenv("REACT_PUBLIC_DIRECTORY"), filename))
+		err := os.Rename(fmt.Sprintf("../images/%s", filename), fmt.Sprintf("../images/old/%s", filename))
 		if err == nil {
 			json, _ := json.MarshalIndent(map[string]string{filename: "ok"}, "", "\t")
 			w.Header().Set("Content-Type", "application/json")
@@ -80,7 +80,7 @@ func UploadFile(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
         log.Fatal(err)
     }
 
-	err = ioutil.WriteFile(fmt.Sprintf("%s/images/%s", os.Getenv("REACT_PUBLIC_DIRECTORY"), filename), fileBytes, 0644) 
+	err = ioutil.WriteFile(fmt.Sprintf("../images/%s", filename), fileBytes, 0644) 
 	
 	if err != nil {
 		log.Fatal(err)
@@ -100,6 +100,7 @@ func main() {
 	router.GET("/api/images", AllImages)
 	router.GET("/api/delete/:filename", DeleteImage)
 	router.POST("/api/upload", UploadFile)
+	router.ServeFiles("/api/image/*filepath", http.Dir("../images"))
 	handler := cors.Default().Handler(router)
 
 	log.Println("Server running on port 8080")
