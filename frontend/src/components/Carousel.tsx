@@ -53,11 +53,13 @@ export default function Carousel() {
           leaveFrom="opacity-100"
           leaveTo="opacity-20"
         >
-          <img
-            src={require(`../../public/images/${images[currentIndex]}`)}
-            alt=""
-            className="relative w-full h-full"
-          />
+          <div className="flex items-center justify-center bg-black">
+            <img
+              src={`http://${REACT_APP_SERVER_IP}:8080/api/image/${images[currentIndex]}`}
+              alt=""
+              className="relative w-full h-full"
+            />
+          </div>
         </Transition>
       )}
     </>
