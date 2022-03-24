@@ -18,7 +18,9 @@ export default function ImageList() {
   }
 
   function addImage(image: string) {
-    setImages([...images, image]);
+    const newImages = [...images, image];
+    newImages.sort();
+    setImages(newImages);
   }
 
   useEffect(() => {
