@@ -21,7 +21,7 @@ export default function UploadButton(addImage: (image: string) => void) {
         htmlFor="imgToUpload"
         className="flex items-center justify-center gap-2 px-2 py-1 text-sm border rounded-md hover:cursor-pointer lg:border-2 border-emerald-500 lg:text-xl bg-slate-800 text-emerald-500 hover:bg-emerald-500 hover:text-slate-800 lg:px-4 lg:py-3 lg:gap-4 cursor:pointer"
       >
-        Ajouter <UploadIcon className="w-4 h-4 lg:h-7 lg:w-7" />
+        Ajouter <UploadIcon className="w-5 h-5 lg:h-6 lg:w-6" />
       </label>
       <input
         type="file"
