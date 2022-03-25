@@ -13,6 +13,7 @@ export default function SingleDeleteButton({ imageName }: Props) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const { REACT_APP_SERVER_IP } = process.env;
   axios.defaults.baseURL = `http://${REACT_APP_SERVER_IP}:8080`;
+  const displayName = imageName.split(".")[0];
   const navigate = useNavigate();
   return (
     <>
@@ -32,10 +33,19 @@ export default function SingleDeleteButton({ imageName }: Props) {
         </div>
         <hr className="h-2 my-4 border-t-2 border-gray-700" />
         <Dialog.Description className="my-6 text-sm md:text-base lg:text-lg">
-          Voulez-vous vraiment supprimer l'image {imageName} ? Cette action est
-          définitive.
+          Voulez-vous vraiment supprimer l'image {displayName} ? Cette action
+          est définitive.
         </Dialog.Description>
         <div className="flex items-center justify-end gap-8">
+          <button
+            onClick={() => setDialogOpen(false)}
+            className="flex items-center justify-center gap-2 text-red-600 border border-red-600 rounded-md w-fit px-2.5 py-1.5 lg:border-2 hover:bg-red-600 hover:text-gray-900"
+          >
+            <p className="hidden text-sm md:block md:text-base lg:text-lg">
+              Annuler
+            </p>
+            <XIcon className="w-5 h-5 lg:h-6 lg:w-6" />
+          </button>
           <button
             onClick={() => {
               setDialogOpen(false);
@@ -49,15 +59,6 @@ export default function SingleDeleteButton({ imageName }: Props) {
               Confirmer
             </p>
             <CheckIcon className="w-5 h-5 lg:h-6 lg:w-6" />
-          </button>
-          <button
-            onClick={() => setDialogOpen(false)}
-            className="flex items-center justify-center gap-2 text-red-600 border border-red-600 rounded-md w-fit px-2.5 py-1.5 lg:border-2 hover:bg-red-600 hover:text-gray-900"
-          >
-            <p className="hidden text-sm md:block md:text-base lg:text-lg">
-              Annuler
-            </p>
-            <XIcon className="w-5 h-5 lg:h-6 lg:w-6" />
           </button>
         </div>
       </Dialog>
