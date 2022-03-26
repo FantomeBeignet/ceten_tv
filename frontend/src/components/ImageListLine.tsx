@@ -24,10 +24,10 @@ export default function ImageListLine(
       </td>
       <td className="w-10 px-2 py-2 text-xs text-left text-white truncate lg:text-2xl lg:px-6 lg:py-4">
         <Link to={`/admin/images/${imageName}`}>
-          <span>{displayName}</span>
+          <span className="hover:underline">{displayName}</span>
         </Link>
       </td>
-      <td className="px-2 py-2 text-center lg:px-6 lg:py-4">
+      <td className="w-px px-2 py-2 text-center lg:px-6 lg:py-4">
         <div className="inline-block">
           <ListDeleteButton imageName={imageName} removeImage={removeImage} />
         </div>
