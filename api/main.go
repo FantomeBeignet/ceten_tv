@@ -10,7 +10,6 @@ import (
 
 	"net/http"
 
-	"github.com/joho/godotenv"
 	"github.com/julienschmidt/httprouter"
 	"github.com/rs/cors"
 )
@@ -91,11 +90,7 @@ func UploadFile(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	fmt.Fprint(w, string(json))
 }
 
-func main() {	
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
+func main() {
 	router := httprouter.New()
 	router.GET("/api/images", AllImages)
 	router.GET("/api/delete/:filename", DeleteImage)
