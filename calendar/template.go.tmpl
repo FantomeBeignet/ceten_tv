@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main>
+      <div class="wrapper">
+        <div class="calendar-hours">
+          <div></div>
+          <p class="hour-marker">12h</p>
+          <p class="hour-marker">13h</p>
+          <p class="hour-marker">14h</p>
+          <p class="hour-marker">15h</p>
+          <p class="hour-marker">16h</p>
+          <p class="hour-marker">17h</p>
+          <p class="hour-marker">18h</p>
+          <p class="hour-marker">19h</p>
+          <p class="hour-marker">20h</p>
+          <p class="hour-marker">21h</p>
+          <p class="hour-marker"></p>
+        </div>
+        <div class="calendar-grid">
+          <div class="calendar-header">
+            {{range $index, $val := .Days}}
+              {{if eq $.Day $index}}
+                <span class="day-header overlay-today">{{$val}}</span>
+              {{else}}
+                <span class="day-header">{{$val}}</span>
+              {{end}}
+            {{end}}
+          </div>
+          <div class="calendar-events">
+            {{range .Events}}
+              <div class="{{.Classes}}">{{.Summary}}</div>
+            {{end}}
+          </div>
+          <div class="calendar-overlay">
+            {{- range $row := Iterate 10 }}
+              {{- range $index := Iterate 5}}
+                {{if eq $.Day $index}}
+                  <div class="calendar-overlay-cell overlay-today"></div>
+                {{else}}
+                  <div class="calendar-overlay-cell"></div>
+                {{end}}
+              {{- end}}
+            {{- end}}
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
