@@ -26,3 +26,7 @@ yarn-error.log*
 # Images
 images/*.png
 images/old/*.png
+
+# API Credentials
+calendar/credentials.json
+calendar/token.json
