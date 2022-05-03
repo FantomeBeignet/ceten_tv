@@ -1,0 +1,305 @@
+body {
+  margin: 0;
+  font-family: sans-serif;
+  --background-color: #f5f5f5;
+  --text-color: #262626;
+  --cell-border-color: #71717a;
+}
+
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  overflow: hidden;
+}
+
+.calendar-hours {
+  display: grid;
+  grid-template-rows: 1.25rem repeat(10, 1fr) 2.75rem;
+  height: 100%;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.hour-marker {
+  display: flex;
+  text-align: center;
+  font-size: 1.5rem;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+}
+
+.calendar-grid {
+  position: relative;
+  height: 100%;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+}
+
+.calendar-header {
+  width: 100%;
+  height: 4rem;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.day-header {
+  font-size: 2rem;
+  font-weight: 700;
+  border: solid;
+  border-color: var(--cell-border-color);
+  border-width: 1px;
+  text-align: center;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.calendar-events {
+  width: 100%;
+  display: grid;
+  flex-grow: 1;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: repeat(20, 1fr);
+}
+
+.calendar-overlay {
+  position: absolute;
+  inset: 4rem 0 0;
+  width: 100%;
+  height: calc(100% - 4rem);
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.calendar-overlay-cell {
+  border: solid;
+  border-color: var(--cell-border-color);
+  border-width: 1px;
+  z-index: 0;
+}
+
+.overlay-today {
+  background-color: #c9c9c9;
+}
+
+.calendar-event-card {
+  background-color: var(--card-background-color);
+  border: solid;
+  border-color: var(--cell-border-color);
+  border-width: 1px;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-weight: 600;
+  z-index: 10;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.half {
+  grid-column-end: span 1;
+  font-size: 1.5rem;
+  padding: 0.5rem;
+}
+
+.full {
+  grid-column-end: span 2;
+  font-size: 1.75rem;
+  padding: 1rem;
+}
+
+.day-1 {
+  grid-column-start: 1;
+}
+
+.day-1b {
+  grid-column-start: 2;
+}
+
+.day-2 {
+  grid-column-start: 3;
+}
+
+.day-2b {
+  grid-column-start: 4;
+}
+
+.day-3 {
+  grid-column-start: 5;
+}
+
+.day-3b {
+  grid-column-start: 6;
+}
+
+.day-4 {
+  grid-column-start: 7;
+}
+
+.day-4b {
+  grid-column-start: 8;
+}
+
+.day-5 {
+  grid-column-start: 9;
+}
+
+.day-5b {
+  grid-column-start: 10;
+}
+
+.duration-30 {
+  grid-row-end: span 1;
+}
+
+.duration-60 {
+  grid-row-end: span 2;
+}
+
+.duration-90 {
+  grid-row-end: span 3;
+}
+
+.duration-120 {
+  grid-row-end: span 4;
+}
+
+.duration-150 {
+  grid-row-end: span 5;
+}
+
+.duration-180 {
+  grid-row-end: span 6;
+}
+
+.duration-210 {
+  grid-row-end: span 7;
+}
+
+.duration-240 {
+  grid-row-end: span 8;
+}
+
+.duration-270 {
+  grid-row-end: span 9;
+}
+
+.duration-300 {
+  grid-row-end: span 10;
+}
+
+.duration-330 {
+  grid-row-end: span 11;
+}
+
+.duration-360 {
+  grid-row-end: span 12;
+}
+
+.start-120 {
+  grid-row-start: 1;
+}
+
+.start-1230 {
+  grid-row-start: 2;
+}
+
+.start-130 {
+  grid-row-start: 3;
+}
+
+.start-1330 {
+  grid-row-start: 4;
+}
+
+.start-140 {
+  grid-row-start: 5;
+}
+
+.start-1430 {
+  grid-row-start: 6;
+}
+
+.start-150 {
+  grid-row-start: 7;
+}
+
+.start-1530 {
+  grid-row-start: 8;
+}
+
+.start-160 {
+  grid-row-start: 9;
+}
+
+.start-1630 {
+  grid-row-start: 10;
+}
+
+.start-170 {
+  grid-row-start: 11;
+}
+
+.start-1730 {
+  grid-row-start: 12;
+}
+
+.start-180 {
+  grid-row-start: 13;
+}
+
+.start-1830 {
+  grid-row-start: 14;
+}
+
+.start-190 {
+  grid-row-start: 15;
+}
+
+.start-1930 {
+  grid-row-start: 16;
+}
+
+.start-200 {
+  grid-row-start: 17;
+}
+
+.start-2030 {
+  grid-row-start: 18;
+}
+
+.start-210 {
+  grid-row-start: 19;
+}
+
+.bds {
+  background-color: #ea580c;
+}
+
+.animest {
+  background-color: #dc2626;
+}
+
+.humanitn {
+  background-color: #0ea5e9;
+}
+
+.tns {
+  background-color: #4338ca;
+}
+
+.ceten {
+  background-color: #820b5f;
+  color: var(--background-color);
+}
