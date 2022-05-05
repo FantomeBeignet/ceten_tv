@@ -4,8 +4,6 @@ import ImageListLine from "./ImageListLine";
 import TopButtonBar from "./TopButtonBar";
 import UploadButton from "./UploadButton";
 
-const { REACT_APP_SERVER_IP } = process.env;
-
 export default function ImageList() {
   const [images, setImages] = useState<string[]>([]);
 
@@ -25,7 +23,6 @@ export default function ImageList() {
 
   useEffect(() => {
     function getImageNames() {
-      axios.defaults.baseURL = `http://${REACT_APP_SERVER_IP}:8080`;
       axios.get("/api/images").then((response) => setImages(response.data));
     }
     getImageNames();

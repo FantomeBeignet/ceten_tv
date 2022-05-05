@@ -11,8 +11,6 @@ interface Props {
 
 export default function SingleDeleteButton({ imageName }: Props) {
   const [dialogOpen, setDialogOpen] = useState(false);
-  const { REACT_APP_SERVER_IP } = process.env;
-  axios.defaults.baseURL = `http://${REACT_APP_SERVER_IP}:8080`;
   const displayName = imageName.split(".")[0];
   const navigate = useNavigate();
   return (

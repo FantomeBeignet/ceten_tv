@@ -2,12 +2,10 @@ import { UploadIcon } from "@heroicons/react/outline";
 import axios from "axios";
 
 const uploadImage = async (event: any, addImage: (image: string) => void) => {
-  const { REACT_APP_SERVER_IP } = process.env;
   if (event.target.files && event.target.files[0]) {
     var image = event.target.files[0];
     const body = new FormData();
     body.append("image", image);
-    axios.defaults.baseURL = `http://${REACT_APP_SERVER_IP}:8080`;
     axios.post("/api/upload", body, {}).then((response) => {
       addImage(image.name);
     });
