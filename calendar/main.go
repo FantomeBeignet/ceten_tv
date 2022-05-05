@@ -183,7 +183,6 @@ func GetEvents() []Event {
 	for index := range returnEvents[0:len(returnEvents)-1] {
 		first := &returnEvents[index]
 		second := &returnEvents[index+1]
-		fmt.Println(first, second)
 		if first.Day ==  second.Day && first.Start.Before(second.Start.Add(second.Duration)) && second.Start.Before(first.Start.Add(first.Duration)) {
 			first.Half = true
 			second.Half = true
