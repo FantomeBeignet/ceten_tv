@@ -1,8 +1,8 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AdminPage from "./pages/AdminPage";
-import SingleImagePage from "./pages/SingleImagePage";
 import Carousel from "./components/Carousel";
+import SingleImagePage from "./pages/SingleImagePage";
 
 export default function App() {
   return (
