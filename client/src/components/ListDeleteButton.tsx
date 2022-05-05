@@ -6,7 +6,7 @@ import axios from "axios";
 
 interface Props {
   imageName: string;
-  removeImage: (imge: string) => void;
+  removeImage: (image: string) => void;
 }
 
 export default function ListDeleteButton({ imageName, removeImage }: Props) {

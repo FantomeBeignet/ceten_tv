@@ -2,7 +2,6 @@ import { Fragment, useEffect, useState } from "react";
 import { Transition } from "@headlessui/react";
 import axios from "axios";
 
-const { REACT_APP_SERVER_IP } = process.env;
 const INTERVAL = 8000;
 
 function sleep(ms: number) {
@@ -16,7 +15,6 @@ export default function Carousel() {
   const [isImageShowing, setImageShowing] = useState(true);
 
   function fetchImages() {
-    axios.defaults.baseURL = `http://${REACT_APP_SERVER_IP}:8080`;
     axios.get("/api/images").then((response) => {
       setImages(response.data);
       setLoading(false);
@@ -55,7 +53,7 @@ export default function Carousel() {
         >
           <div className="flex items-center justify-center bg-black">
             <img
-              src={`http://${REACT_APP_SERVER_IP}:8080/api/image/${images[currentIndex]}`}
+              src={`/api/image/${images[currentIndex]}`}
               alt=""
               className="relative w-full h-full"
             />

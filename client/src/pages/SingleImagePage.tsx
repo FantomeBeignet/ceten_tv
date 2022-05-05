@@ -5,17 +5,16 @@ import SingleDeleteButton from "../components/SingleDeleteButton";
 import Image from "../components/Image";
 
 export default function SingleImagePage() {
-  const params = useParams();
-  const imageName = params.imagename as string;
-  const displayName = imageName.split(".")[0];
+  const { imagename } = useParams();
+  const displayName = imagename!.split(".")[0];
   return (
     <>
       <Navbar />
       <TopButtonBar
         text={displayName}
-        button={SingleDeleteButton({ imageName: imageName })}
+        button={SingleDeleteButton({ imageName: imagename! })}
       />
-      <Image imageName={imageName} />
+      <Image imageName={imagename!} />
     </>
   );
 }

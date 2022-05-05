@@ -22,10 +22,7 @@ export default function ImageList() {
   }
 
   useEffect(() => {
-    function getImageNames() {
-      axios.get("/api/images").then((response) => setImages(response.data));
-    }
-    getImageNames();
+    axios.get("/api/images").then((response) => setImages(response.data));
   }, []);
 
   return (
