@@ -18,10 +18,6 @@ export default function App() {
             <Route path="/" element={<Carousel />} />
             <Route path="/admin" element={<AdminPage />} />
             <Route path="/admin/:imagename" element={<AdminPage />} />
-            {/* <Route
-              path="/admin/images/:imagename"
-              element={<SingleImagePage />}
-            /> */}
           </Routes>
         </div>
       </BrowserRouter>
