@@ -22,7 +22,7 @@ export default function LogoutButton() {
       render={(renderProps: any) => (
         <button
           onClick={renderProps.onClick}
-          className="p-5 text-xl text-center text-white border-2 rounded-lg border-slate-700 hover:underline underline-offset-4"
+          className="p-5 my-16 text-xl text-center text-white border-2 rounded-lg border-slate-700 hover:underline underline-offset-4"
         >
           Se déconnecter
         </button>
