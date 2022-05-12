@@ -22,13 +22,16 @@ export default function AdminPage() {
           button={SingleDeleteButton({ imageName: imagename })}
         />
         <Image imageName={imagename} />
+        <div className="flex items-center justify-center w-full">
+          <LogoutButton />
+        </div>
       </>
     );
   } else {
     component = (
       <>
         <ImageList />
-        <div className="flex items-center justify-center w-full my-16">
+        <div className="flex items-center justify-center w-full">
           <LogoutButton />
         </div>
       </>
