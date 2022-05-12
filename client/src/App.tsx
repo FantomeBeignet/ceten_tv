@@ -2,7 +2,6 @@ import React, { createContext, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AdminPage from "./pages/AdminPage";
 import Carousel from "./components/Carousel";
-import SingleImagePage from "./pages/SingleImagePage";
 
 export const LoginContext = createContext({
   loggedIn: false,
@@ -18,10 +17,11 @@ export default function App() {
           <Routes>
             <Route path="/" element={<Carousel />} />
             <Route path="/admin" element={<AdminPage />} />
-            <Route
+            <Route path="/admin/:imagename" element={<AdminPage />} />
+            {/* <Route
               path="/admin/images/:imagename"
               element={<SingleImagePage />}
-            />
+            /> */}
           </Routes>
         </div>
       </BrowserRouter>
