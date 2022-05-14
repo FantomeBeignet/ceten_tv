@@ -9,10 +9,10 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"os/exec"
 	"strings"
 	"time"
 
+	"github.com/chromedp/chromedp"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
 	"google.golang.org/api/calendar/v3"
@@ -180,6 +180,9 @@ func GetEvents() []Event {
 			returnEvents = append(returnEvents, newEvent)
 		}
 	}
+	if len(returnEvents) == 0 {
+		return make([]Event, 0)
+	}
 	for index := range returnEvents[0:len(returnEvents)-1] {
 		first := &returnEvents[index]
 		second := &returnEvents[index+1]
@@ -240,11 +243,33 @@ func FillTemplate(data TemplateData) {
 func MakeImage() {
 	imageName := fmt.Sprintf("Agenda_%s.png", WeekStart(time.Now()).Format("20060102"))
 	log.Println("Creating image:", imageName)
-	cmd := exec.Command("chromium", "--verbose", "--headless", "--disable-gpu", fmt.Sprintf("--screenshot=%s", imageName), "--window-size=1920,1080", "agenda.html")
-	err := cmd.Run()
+	// cmd := exec.Command("chromium", "--verbose", "--headless", "--disable-gpu", fmt.Sprintf("--screenshot=%s", imageName), "--window-size=1920,1080", "agenda.html")
+	// err := cmd.Run()
+	// if err != nil {
+	// 	log.Fatalf("Unable to execute command: %v", err)
+	ctx, cancel := chromedp.NewContext(
+		context.Background(),
+		// chromedp.WithDebugf(log.Printf),
+	)
+	defer cancel()
+	path, err := os.Getwd()
 	if err != nil {
-		log.Fatalf("Unable to execute command: %v", err)
+		log.Fatalf("Unable to get working directory: %v", err)
+	}
+	var buf []byte
+	var screenshot = chromedp.Tasks{
+		chromedp.Navigate(fmt.Sprintf("file://%s/agenda.html", path)),
+		chromedp.EmulateViewport(1920, 1080),
+		chromedp.FullScreenshot(&buf, 100),
+	}
+	err = chromedp.Run(ctx, screenshot)
+	if err != nil {
+		log.Fatalf("Unable to run command: %v", err)
 	} else {
+		err = ioutil.WriteFile(imageName, buf, 0644)
+		if err != nil {
+			log.Fatalf("Unable to write file: %v", err)
+		}
 		oldImageName := fmt.Sprintf("Agenda_%s.png", WeekStart(time.Now().AddDate(0, 0, -7)).Format("20060102"))
 		err := os.Rename(imageName, "../images/" + imageName)
 		if err != nil {
@@ -267,6 +292,9 @@ func MakeImage() {
 func main() {
 	var	htmlEvents []HTMLEvent
 	events := GetEvents()
+	if len(events) == 0 {
+		log.Fatalf("No events found")
+	}
 	for _, item := range events {
 		fmt.Printf("Event: %s\n-Day: %d\n-Start time: %s\n-Duration %s\nAssoc: %s\n", item.Summary, item.Day, item.Start, item.Duration, item.Assoc)
 		htmlEvents = append(htmlEvents, GetHTMLEvent(item))
