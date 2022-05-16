@@ -6,7 +6,12 @@ body {
   --cell-border-color: #71717a;
 }
 
+/* .wrapper {
+  padding: 1em;
+} */
+
 .wrapper {
+  padding: 1em;
   display: flex;
   justify-content: center;
   align-items: center;
