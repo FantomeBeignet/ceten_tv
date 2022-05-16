@@ -262,7 +262,7 @@ func MakeImage() {
 	if err != nil {
 		log.Fatalf("Unable to run command: %v", err)
 	} else {
-		err = os.Remove("../images" + imageName)
+		err = os.Remove("../images/" + imageName)
 		if err != nil {
 			log.Fatalf("Unable to remove image: %v", err)
 		}
@@ -281,7 +281,7 @@ func MakeImage() {
 			log.Fatalf("Unable to remove file: %v", err)
 		}
 		log.Println("Removing template file:", "agenda.html")
-		err = os.Remove("../images/" + oldImageName,)
+		err = os.Remove("../images/" + oldImageName)
 		if err != nil {
 			log.Fatalf("Unable to rename image: %v", err)
 		}
