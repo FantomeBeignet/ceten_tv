@@ -20,9 +20,7 @@ export default function Carousel() {
   }
 
   useEffect(() => {
-    if (currentIndex === 0) {
-      fetchImages();
-    }
+    fetchImages();
     const interval = setInterval(() => {
       sleep(300).then(() => {
         setCurrentIndex((currentIndex + 1) % images.length);
