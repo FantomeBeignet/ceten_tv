@@ -37,7 +37,7 @@ export default function Carousel() {
         <></>
       ) : (
 
-          <div className="flex items-center justify-center bg-black">
+          <div className="flex items-center justify-center p-12 bg-black">
             <img
               src={`/api/image/${images[currentIndex]}`}
               alt=""
