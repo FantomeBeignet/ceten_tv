@@ -2,7 +2,6 @@ import { useState } from "react";
 import { TrashIcon } from "@heroicons/react/outline";
 import { Dialog } from "@headlessui/react";
 import { CheckIcon, XIcon } from "@heroicons/react/outline";
-import axios from "axios";
 
 interface Props {
   imageName: string;
@@ -47,7 +46,6 @@ export default function ListDeleteButton({ imageName, removeImage }: Props) {
             onClick={() => {
               removeImage(imageName);
               setDialogOpen(false);
-              axios.get(`/api/delete/${imageName}`);
             }}
             className="flex items-center justify-center gap-2 border rounded-md w-fit px-2.5 py-1.5 lg:border-2 border-emerald-500 text-emerald-500 hover:bg-emerald-500 hover:text-gray-900"
           >
