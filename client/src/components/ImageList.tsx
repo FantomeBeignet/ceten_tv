@@ -8,11 +8,14 @@ export default function ImageList() {
   const [images, setImages] = useState<string[]>([]);
 
   function removeImage(image: string) {
-    setImages(
-      images.filter((value, index, arr) => {
-        return value !== image;
-      })
-    );
+    axios.get(`/api/delete/${image}`).then(
+      () => setImages(
+        images.filter((value, index, arr) => {
+          return value !== image;
+        })
+      )
+    )
+    ;
   }
 
   function addImage(image: string) {
