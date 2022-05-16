@@ -243,10 +243,6 @@ func FillTemplate(data TemplateData) {
 func MakeImage() {
 	imageName := fmt.Sprintf("Agenda_%s.png", WeekStart(time.Now()).Format("20060102"))
 	log.Println("Creating image:", imageName)
-	// cmd := exec.Command("chromium", "--verbose", "--headless", "--disable-gpu", fmt.Sprintf("--screenshot=%s", imageName), "--window-size=1920,1080", "agenda.html")
-	// err := cmd.Run()
-	// if err != nil {
-	// 	log.Fatalf("Unable to execute command: %v", err)
 	ctx, cancel := chromedp.NewContext(
 		context.Background(),
 		// chromedp.WithDebugf(log.Printf),
@@ -266,6 +262,10 @@ func MakeImage() {
 	if err != nil {
 		log.Fatalf("Unable to run command: %v", err)
 	} else {
+		err = os.Remove("../images" + imageName)
+		if err != nil {
+			log.Fatalf("Unable to remove image: %v", err)
+		}
 		err = ioutil.WriteFile(imageName, buf, 0644)
 		if err != nil {
 			log.Fatalf("Unable to write file: %v", err)
@@ -281,7 +281,7 @@ func MakeImage() {
 			log.Fatalf("Unable to remove file: %v", err)
 		}
 		log.Println("Removing template file:", "agenda.html")
-		err = os.Rename("../images/" + oldImageName, "../images/old/" + oldImageName)
+		err = os.Remove("../images/" + oldImageName,)
 		if err != nil {
 			log.Fatalf("Unable to rename image: %v", err)
 		}
