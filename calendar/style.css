@@ -11,7 +11,7 @@ body {
 } */
 
 .wrapper {
-  padding: 1em;
+  padding: 2em;
   display: flex;
   justify-content: center;
   align-items: center;
