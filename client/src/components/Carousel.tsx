@@ -1,5 +1,4 @@
 import { Fragment, useEffect, useState } from "react";
-import { Transition } from "@headlessui/react";
 import axios from "axios";
 
 const INTERVAL = 8000;
@@ -12,7 +11,6 @@ export default function Carousel() {
   const [loading, setLoading] = useState(true);
   const [images, setImages] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isImageShowing, setImageShowing] = useState(true);
 
   function fetchImages() {
     axios.get("/api/images").then((response) => {
@@ -26,10 +24,8 @@ export default function Carousel() {
       fetchImages();
     }
     const interval = setInterval(() => {
-      setImageShowing(false);
       sleep(300).then(() => {
         setCurrentIndex((currentIndex + 1) % images.length);
-        setImageShowing(true);
       });
     }, INTERVAL);
     return () => clearInterval(interval);
@@ -40,17 +36,7 @@ export default function Carousel() {
       {loading ? (
         <></>
       ) : (
-        <Transition
-          as={Fragment}
-          appear={true}
-          show={isImageShowing}
-          enter="transition-opacity ease-linear duration-200"
-          enterFrom="opacity-20"
-          enterTo="opacity-100"
-          leave="transition-opacity ease-linear duration-200"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-20"
-        >
+
           <div className="flex items-center justify-center bg-black">
             <img
               src={`/api/image/${images[currentIndex]}`}
@@ -58,7 +44,6 @@ export default function Carousel() {
               className="relative w-full h-full"
             />
           </div>
-        </Transition>
       )}
     </>
   );
