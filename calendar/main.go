@@ -290,13 +290,20 @@ func MakeImage() {
 }
 
 func main() {
+	logfile, err := os.OpenFile("agenda.log", os.O_RDWR | os.O_CREATE | os.O_APPEND, 0666)
+	if err != nil {
+		log.Fatalf("Unable to open log file: %v", err)
+	}
+	defer logfile.Close()
+	log.SetOutput(logfile)
+	log.Println("Starting agenda")
 	var	htmlEvents []HTMLEvent
 	events := GetEvents()
 	if len(events) == 0 {
 		log.Fatalf("No events found")
 	}
 	for _, item := range events {
-		fmt.Printf("Event: %s\n-Day: %d\n-Start time: %s\n-Duration %s\nAssoc: %s\n", item.Summary, item.Day, item.Start, item.Duration, item.Assoc)
+		log.Printf("Event: %s\n-Day: %d\n-Start time: %s\n-Duration %s\nAssoc: %s\n", item.Summary, item.Day, item.Start, item.Duration, item.Assoc)
 		htmlEvents = append(htmlEvents, GetHTMLEvent(item))
 	}
 	data := TemplateData{htmlEvents, int(time.Now().Weekday() - 1), []string{"Lun.", "Mar.", "Mer.", "Jeu.", "Ven."}}
