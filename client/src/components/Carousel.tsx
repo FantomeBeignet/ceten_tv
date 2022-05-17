@@ -13,7 +13,13 @@ export default function Carousel() {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   function fetchImages() {
-    axios.get("/api/images").then((response) => {
+    axios.get("/api/images", {
+      headers: {
+        'Cache-Control': 'no-cache',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+      }
+    }).then((response) => {
       setImages(response.data);
       setLoading(false);
     });
@@ -37,7 +43,7 @@ export default function Carousel() {
 
           <div className="flex items-center justify-center bg-black">
             <img
-              src={`/api/image/${images[currentIndex]}`}
+              src={`/api/image/${images[currentIndex]}?timestamp=${new Date().getTime()}`}
               alt=""
               className="relative w-full h-full"
             />
