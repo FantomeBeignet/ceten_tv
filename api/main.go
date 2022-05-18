@@ -16,6 +16,7 @@ import (
 
 
 func ListImages() []string {
+	// Read all files in images directory
 	files, err := ioutil.ReadDir("../images")
     if err != nil {
         log.Fatal(err)
@@ -23,6 +24,7 @@ func ListImages() []string {
 	images := make([]string, 0)
 	for _, img := range files {
 		if !img.IsDir() {
+			// Exclude folders (at least "old" folder)
 			images = append(images, img.Name())
 		}
 	}
@@ -30,6 +32,7 @@ func ListImages() []string {
 }
 
 func AllImages(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	// API route to get all images
 	imageList := ListImages()
 	jsonData, err := json.MarshalIndent(imageList, "", "\t")
 	if err != nil {
@@ -41,10 +44,12 @@ func AllImages(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 func DeleteImage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	filename := ps.ByName("filename")
+	// Test if file exists
 	_, err := os.Stat(fmt.Sprintf("../images/%s", filename))
 	if err != nil {
 		http.Error(w, "The file does not exist", http.StatusNotFound)
 	} else {
+		// Move file into "old" folder
 		err := os.Rename(fmt.Sprintf("../images/%s", filename), fmt.Sprintf("../images/old/%s", filename))
 		if err == nil {
 			json, _ := json.MarshalIndent(map[string]string{filename: "ok"}, "", "\t")
@@ -78,7 +83,7 @@ func UploadFile(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
     if err != nil {
         log.Fatal(err)
     }
-
+	// Write file to images directory
 	err = ioutil.WriteFile(fmt.Sprintf("../images/%s", filename), fileBytes, 0644) 
 	
 	if err != nil {
@@ -96,7 +101,7 @@ func main() {
 	router.GET("/api/delete/:filename", DeleteImage)
 	router.POST("/api/upload", UploadFile)
 	router.ServeFiles("/api/image/*filepath", http.Dir("../images"))
-	handler := cors.Default().Handler(router)
+	handler := cors.Default().Handler(router) // CORS middleware
 
 	log.Println("Server running on port 8080")
 

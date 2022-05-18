@@ -4,6 +4,7 @@ import axios from "axios";
 const uploadImage = async (event: any, addImage: (image: string) => void) => {
   if (event.target.files && event.target.files[0]) {
     var image = event.target.files[0];
+    // Create empty form then add the image to it
     const body = new FormData();
     body.append("image", image);
     axios.post("/api/upload", body, {}).then((response) => {

@@ -14,6 +14,7 @@ export default function Carousel() {
 
   function fetchImages() {
     axios.get("/api/images", {
+      // Ensures image list doesn't get cached
       headers: {
         'Cache-Control': 'no-cache',
         'Pragma': 'no-cache',
@@ -27,6 +28,7 @@ export default function Carousel() {
 
   useEffect(() => {
     fetchImages();
+    // Switch to next image every INTERVAL milliseconds
     const interval = setInterval(() => {
       sleep(300).then(() => {
         setCurrentIndex((currentIndex + 1) % images.length);
@@ -43,7 +45,7 @@ export default function Carousel() {
 
           <div className="flex items-center justify-center bg-black">
             <img
-              src={`/api/image/${images[currentIndex]}?timestamp=${new Date().getTime()}`}
+              src={`/api/image/${images[currentIndex]}?timestamp=${new Date().getTime()}`} // Timestamp is there to prevent caching, it does nothing special in the API
               alt=""
               className="relative w-full h-full"
             />

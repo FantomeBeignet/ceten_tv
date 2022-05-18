@@ -2,8 +2,8 @@ import React, { useContext, useState } from "react";
 import { GoogleLogin } from "react-google-login";
 import { LoginContext } from "../App";
 
-const clientID = process.env.REACT_APP_CLIENT_ID;
-const targetID = process.env.REACT_APP_TARGET_ID;
+const clientID = process.env.REACT_APP_CLIENT_ID; 
+const targetID = process.env.REACT_APP_TARGET_ID; // ID of account authorized to log in
 
 export default function LoginButton() {
   const { setLoggedIn } = useContext(LoginContext);
@@ -16,7 +16,7 @@ export default function LoginButton() {
       setLoggedIn(true);
     } else {
       setLoginFailed(true);
-      return { error: "access_denied" };
+      return { error: "access_denied" }; // Error code to make sure user isn't logged in
     }
   }
 
@@ -41,8 +41,8 @@ export default function LoginButton() {
           clientId={clientID!}
           onSuccess={onSuccess}
           onFailure={onFailure}
-          isSignedIn={true}
-          uxMode={"popup"}
+          isSignedIn={true} // Will trigger the onSuccess function on page load to ensure state works correctly
+          uxMode={"popup"} // Mode "redirect" is cleaner but somehow doesn't work
           hostedDomain={"telecomnancy.net"}
           redirectUri={"http://localhost:3000/admin/"}
           render={(renderProps: any) => (

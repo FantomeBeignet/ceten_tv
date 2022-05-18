@@ -11,7 +11,8 @@ export const LoginContext = createContext({
 export default function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   return (
-    <LoginContext.Provider value={{ loggedIn, setLoggedIn }}>
+    // Global login state
+    <LoginContext.Provider value={{ loggedIn, setLoggedIn }}> 
       <BrowserRouter>
         <div id="wrapper" className="min-h-screen bg-gray-800">
           <Routes>

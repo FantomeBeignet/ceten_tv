@@ -175,6 +175,7 @@ func GetEvents() []Event {
 			default:
 				assoc = "ceten"
 		}
+		// Filters events to only include events and not regular activities
 		if strings.Contains(strings.ToLower(summary), "[event]") && duration.Hours() <= 6 {
 			newEvent := Event{summary, int(start.Weekday()), start, duration, assoc, false, false}
 			returnEvents = append(returnEvents, newEvent)
@@ -183,12 +184,16 @@ func GetEvents() []Event {
 	if len(returnEvents) == 0 {
 		return make([]Event, 0)
 	}
+	// Handles event overlap
 	for index := range returnEvents[0:len(returnEvents)-1] {
 		first := &returnEvents[index]
 		second := &returnEvents[index+1]
+		// If two events overlap
 		if first.Day ==  second.Day && first.Start.Before(second.Start.Add(second.Duration)) && second.Start.Before(first.Start.Add(first.Duration)) {
+			// Set both events as half width
 			first.Half = true
 			second.Half = true
+			// Set both events at opposite sides
 			if first.Side {
 				second.Side = false
 			} else {
@@ -254,9 +259,9 @@ func MakeImage() {
 	}
 	var buf []byte
 	var screenshot = chromedp.Tasks{
-		chromedp.Navigate(fmt.Sprintf("file://%s/agenda.html", path)),
-		chromedp.EmulateViewport(1920, 1080),
-		chromedp.FullScreenshot(&buf, 100),
+		chromedp.Navigate(fmt.Sprintf("file://%s/agenda.html", path)), // Load file into browser
+		chromedp.EmulateViewport(1920, 1080), // Set viewport to 1920x1080
+		chromedp.FullScreenshot(&buf, 100), // Take screenshot
 	}
 	err = chromedp.Run(ctx, screenshot)
 	if err != nil {

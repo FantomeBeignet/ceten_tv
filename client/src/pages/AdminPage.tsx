@@ -13,7 +13,7 @@ export default function AdminPage() {
   const { loggedIn } = useContext(LoginContext);
   const { imagename } = useParams();
   var component = null;
-  if (imagename !== undefined) {
+  if (imagename !== undefined) { // Load page with image in case the parameter is passed in the query string
     const displayName = imagename.split(".")[0];
     component = (
       <>
@@ -27,7 +27,7 @@ export default function AdminPage() {
         </div>
       </>
     );
-  } else {
+  } else { // Default to image list
     component = (
       <>
         <ImageList />
