@@ -305,7 +305,7 @@ func main() {
 	var	htmlEvents []HTMLEvent
 	events := GetEvents()
 	if len(events) == 0 {
-		log.Fatalf("No events found")
+		log.Printf("No events found")
 	}
 	for _, item := range events {
 		log.Printf("Event: %s\n-Day: %d\n-Start time: %s\n-Duration %s\nAssoc: %s\n", item.Summary, item.Day, item.Start, item.Duration, item.Assoc)
