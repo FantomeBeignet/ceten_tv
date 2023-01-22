@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - 80:3000
+      - 5173:5173
