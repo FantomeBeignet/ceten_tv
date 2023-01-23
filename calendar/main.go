@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"html/template"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -20,13 +19,13 @@ import (
 )
 
 type Event struct {
-	Summary string
-	Day int
-	Start time.Time
+	Summary  string
+	Day      int
+	Start    time.Time
 	Duration time.Duration
-	Assoc string
-	Half bool
-	Side bool
+	Assoc    string
+	Half     bool
+	Side     bool
 }
 
 type HTMLEvent struct {
@@ -36,8 +35,8 @@ type HTMLEvent struct {
 
 type TemplateData struct {
 	Events []HTMLEvent
-	Day int
-	Days []string
+	Day    int
+	Days   []string
 }
 
 // Retrieve a token, saves the token, then returns the generated client.
@@ -48,8 +47,8 @@ func getClient(config *oauth2.Config) *http.Client {
 	tokFile := "token.json"
 	tok, err := tokenFromFile(tokFile)
 	if err != nil {
-			tok = getTokenFromWeb(config)
-			saveToken(tokFile, tok)
+		tok = getTokenFromWeb(config)
+		saveToken(tokFile, tok)
 	}
 	return config.Client(context.Background(), tok)
 }
@@ -58,16 +57,16 @@ func getClient(config *oauth2.Config) *http.Client {
 func getTokenFromWeb(config *oauth2.Config) *oauth2.Token {
 	authURL := config.AuthCodeURL("state-token", oauth2.AccessTypeOffline)
 	fmt.Printf("Go to the following link in your browser then type the "+
-			"authorization code: \n%v\n", authURL)
+		"authorization code: \n%v\n", authURL)
 
 	var authCode string
 	if _, err := fmt.Scan(&authCode); err != nil {
-			log.Fatalf("Unable to read authorization code: %v", err)
+		log.Fatalf("Unable to read authorization code: %v", err)
 	}
 
 	tok, err := config.Exchange(context.TODO(), authCode)
 	if err != nil {
-			log.Fatalf("Unable to retrieve token from web: %v", err)
+		log.Fatalf("Unable to retrieve token from web: %v", err)
 	}
 	return tok
 }
@@ -76,7 +75,7 @@ func getTokenFromWeb(config *oauth2.Config) *oauth2.Token {
 func tokenFromFile(file string) (*oauth2.Token, error) {
 	f, err := os.Open(file)
 	if err != nil {
-			return nil, err
+		return nil, err
 	}
 	defer f.Close()
 	tok := &oauth2.Token{}
@@ -89,7 +88,7 @@ func saveToken(path string, token *oauth2.Token) {
 	fmt.Printf("Saving credential file to: %s\n", path)
 	f, err := os.OpenFile(path, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0600)
 	if err != nil {
-			log.Fatalf("Unable to cache oauth token: %v", err)
+		log.Fatalf("Unable to cache oauth token: %v", err)
 	}
 	defer f.Close()
 	json.NewEncoder(f).Encode(token)
@@ -97,41 +96,41 @@ func saveToken(path string, token *oauth2.Token) {
 
 func WeekStart(day time.Time) time.Time {
 	year, week := day.ISOWeek()
-    // Start from the middle of the year:
-    t := time.Date(year, 7, 1, 0, 0, 0, 0, time.UTC)
-    // Roll back to Monday:
-    if wd := t.Weekday(); wd == time.Sunday {
-        t = t.AddDate(0, 0, -6)
-    } else {
-        t = t.AddDate(0, 0, -int(wd)+1)
-    }
-    // Difference in weeks:
-    _, w := t.ISOWeek()
-    t = t.AddDate(0, 0, (week-w)*7)
-    return t
+	// Start from the middle of the year:
+	t := time.Date(year, 7, 1, 0, 0, 0, 0, time.UTC)
+	// Roll back to Monday:
+	if wd := t.Weekday(); wd == time.Sunday {
+		t = t.AddDate(0, 0, -6)
+	} else {
+		t = t.AddDate(0, 0, -int(wd)+1)
+	}
+	// Difference in weeks:
+	_, w := t.ISOWeek()
+	t = t.AddDate(0, 0, (week-w)*7)
+	return t
 }
 
 func GetEvents() []Event {
 	ctx := context.Background()
-	b, err := ioutil.ReadFile("credentials.json")
+	b, err := os.ReadFile("credentials.json")
 	if err != nil {
-			log.Fatalf("Unable to read client secret file: %v", err)
+		log.Fatalf("Unable to read client secret file: %v", err)
 	}
 	// If modifying these scopes, delete your previously saved token.json.
 	config, err := google.ConfigFromJSON(b, calendar.CalendarReadonlyScope)
 	if err != nil {
-			log.Fatalf("Unable to parse client secret file to config: %v", err)
+		log.Fatalf("Unable to parse client secret file to config: %v", err)
 	}
 	client := getClient(config)
 
 	srv, err := calendar.NewService(ctx, option.WithHTTPClient(client))
 	if err != nil {
-			log.Fatalf("Unable to retrieve Calendar client: %v", err)
+		log.Fatalf("Unable to retrieve Calendar client: %v", err)
 	}
 	// Gets Calendar corresponding to "Agenda des Associations"
 	calendar, err := srv.CalendarList.Get("esial.net_og2ar8u1hdq3mh4v8komg5sbpg@group.calendar.google.com").Do()
 	if err != nil {
-			log.Fatalf("Unable to retrieve Calendar: %v", err)
+		log.Fatalf("Unable to retrieve Calendar: %v", err)
 	}
 	calId := calendar.Id
 
@@ -139,9 +138,9 @@ func GetEvents() []Event {
 	weekEnd := weekStart.AddDate(0, 0, 5)
 	// Gets events for the current week from the calendar, from earliest to latest
 	events, err := srv.Events.List(calId).ShowDeleted(false).
-			SingleEvents(true).TimeMin(weekStart.Format(time.RFC3339)).TimeMax(weekEnd.Format(time.RFC3339)).OrderBy("startTime").Do()
+		SingleEvents(true).TimeMin(weekStart.Format(time.RFC3339)).TimeMax(weekEnd.Format(time.RFC3339)).OrderBy("startTime").Do()
 	if err != nil {
-			log.Fatalf("Unable to retrieve next ten of the user's events: %v", err)
+		log.Fatalf("Unable to retrieve next ten of the user's events: %v", err)
 	}
 	var returnEvents []Event
 	for _, item := range events.Items {
@@ -164,16 +163,16 @@ func GetEvents() []Event {
 		summary_lower := strings.ToLower(summary)
 		assoc := ""
 		switch {
-			case strings.Contains(summary_lower, "bds"):
-				assoc = "bds"
-			case strings.Contains(summary_lower, "humani"):
-				assoc = "humanitn"
-			case strings.Contains(summary_lower, "anim'est"):
-				assoc = "animest"
-			case strings.Contains(summary_lower, "tns"):
-				assoc = "tns"
-			default:
-				assoc = "ceten"
+		case strings.Contains(summary_lower, "bds"):
+			assoc = "bds"
+		case strings.Contains(summary_lower, "humani"):
+			assoc = "humanitn"
+		case strings.Contains(summary_lower, "anim'est"):
+			assoc = "animest"
+		case strings.Contains(summary_lower, "tns"):
+			assoc = "tns"
+		default:
+			assoc = "ceten"
 		}
 		// Filters events to only include events and not regular activities
 		if strings.Contains(strings.ToLower(summary), "[event]") && duration.Hours() <= 6 {
@@ -185,11 +184,11 @@ func GetEvents() []Event {
 		return make([]Event, 0)
 	}
 	// Handles event overlap
-	for index := range returnEvents[0:len(returnEvents)-1] {
+	for index := range returnEvents[0 : len(returnEvents)-1] {
 		first := &returnEvents[index]
 		second := &returnEvents[index+1]
 		// If two events overlap
-		if first.Day ==  second.Day && first.Start.Before(second.Start.Add(second.Duration)) && second.Start.Before(first.Start.Add(first.Duration)) {
+		if first.Day == second.Day && first.Start.Before(second.Start.Add(second.Duration)) && second.Start.Before(first.Start.Add(first.Duration)) {
 			// Set both events as half width
 			first.Half = true
 			second.Half = true
@@ -214,7 +213,7 @@ func GetHTMLEvent(e Event) HTMLEvent {
 	var bis string
 	if e.Side {
 		bis = "b"
-	} else { 
+	} else {
 		bis = ""
 	}
 	classes := fmt.Sprintf("calendar-event-card day-%d%s start-%s duration-%s %s %s", e.Day, bis, fmt.Sprintf("%d%d", e.Start.Hour(), e.Start.Minute()), fmt.Sprintf("%d", int(e.Duration.Minutes())), e.Assoc, half)
@@ -229,7 +228,7 @@ func FillTemplate(data TemplateData) {
 			for i = 0; i < (count); i++ {
 				Items = append(Items, i)
 			}
-		return Items
+			return Items
 		},
 	}).ParseFiles("template.go.tmpl")
 	if err != nil {
@@ -260,8 +259,8 @@ func MakeImage() {
 	var buf []byte
 	var screenshot = chromedp.Tasks{
 		chromedp.Navigate(fmt.Sprintf("file://%s/agenda.html", path)), // Load file into browser
-		chromedp.EmulateViewport(1920, 1080), // Set viewport to 1920x1080
-		chromedp.FullScreenshot(&buf, 100), // Take screenshot
+		chromedp.EmulateViewport(1920, 1080),                          // Set viewport to 1920x1080
+		chromedp.FullScreenshot(&buf, 100),                            // Take screenshot
 	}
 	err = chromedp.Run(ctx, screenshot)
 	if err != nil {
@@ -271,12 +270,12 @@ func MakeImage() {
 		if err != nil {
 			log.Printf("Unable to remove image: %v", err)
 		}
-		err = ioutil.WriteFile(imageName, buf, 0644)
+		err = os.WriteFile(imageName, buf, 0644)
 		if err != nil {
 			log.Fatalf("Unable to write file: %v", err)
 		}
 		oldImageName := fmt.Sprintf("Agenda_%s.png", WeekStart(time.Now().AddDate(0, 0, -7)).Format("20060102"))
-		err := os.Rename(imageName, "../images/" + imageName)
+		err := os.Rename(imageName, "../images/"+imageName)
 		if err != nil {
 			log.Printf("Unable to remove image: %v", err)
 		}
@@ -290,19 +289,19 @@ func MakeImage() {
 		if err != nil {
 			log.Printf("Unable to rename image: %v", err)
 		}
-		log.Println("Moving image into images folder:", "../images/" + imageName)
+		log.Println("Moving image into images folder:", "../images/"+imageName)
 	}
 }
 
 func main() {
-	logfile, err := os.OpenFile("agenda.log", os.O_RDWR | os.O_CREATE | os.O_APPEND, 0666)
+	logfile, err := os.OpenFile("agenda.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		log.Fatalf("Unable to open log file: %v", err)
 	}
 	defer logfile.Close()
 	log.SetOutput(logfile)
 	log.Println("Starting agenda")
-	var	htmlEvents []HTMLEvent
+	var htmlEvents []HTMLEvent
 	events := GetEvents()
 	if len(events) == 0 {
 		log.Printf("No events found")
