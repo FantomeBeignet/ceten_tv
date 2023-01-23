@@ -1,0 +1,1 @@
+0 7,12,17 * * * /app/calendar >/dev/null 2>&1
