@@ -30,3 +30,7 @@ images/old/*.png
 # API Credentials
 calendar/config/credentials.json
 calendar/config/token.json
+
+# Dotenv
+.env
+data/
