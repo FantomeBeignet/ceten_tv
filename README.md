@@ -39,3 +39,7 @@ The admin interface is available on the `/admin` route. It allows you to upload 
 ### Traefik
 
 The Traefik dashboard is available on the `https://traefik.DOMAIN` route.
+
+## Development
+
+A development environment for the SvelteKit app is available with Docker Compose. To start it, run `docker-compose -f docker-compose.dev.yml up -d`. The app will be available on the `http://localhost:5173` route.
