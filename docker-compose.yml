@@ -5,11 +5,21 @@ services:
     build:
       context: ./client
       dockerfile: Dockerfile
-    ports:
-      - 80:3000
-      - 5173:5173
     volumes:
       - tv-images:/app/images
+    labels:
+      - traefik.enable=true
+      - traefik.http.services.client.loadbalancer.server.port=3000
+      #http
+      - traefik.http.routers.client_http.entrypoints=http
+      - traefik.http.routers.client_http.rule=PathPrefix(`/`)
+      - traefik.http.routers.client_http.service=client
+      # https
+      - traefik.http.routers.client_https.entrypoints=https
+      - traefik.http.routers.client_https.rule=PathPrefix(`/`)
+      - traefik.http.routers.client_https.service=client
+      - traefik.http.routers.client_https.tls=true
+
 
   calendar:
     build:
@@ -17,6 +27,41 @@ services:
       dockerfile: Dockerfile
     volumes:
       - tv-images:/app/images
+
+  traefik:
+    image: traefik:latest
+    command:
+      - --entrypoints.http.address=:80
+      - --entrypoints.https.address=:443
+
+      - --providers.docker=true
+
+      - --api=true
+
+      # LetsEncrypt Staging Server - uncomment when testing
+      # - --certificatesResolvers.letsencrypt.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory
+
+      - --certificatesresolvers.letsencrypt.acme.httpchallenge=true
+      - --certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=http
+      - --certificatesresolvers.letsencrypt.acme.email=${EMAIL}
+      - --certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json
+    labels:
+      # Redirect all HTTP traffic to HTTPS
+      - traefik.http.routers.to-https.rule=HostRegexp(`{host:.+}`)
+      - traefik.http.routers.to-https.entrypoints=http
+      - traefik.http.routers.to-https.middlewares=to-https
+      - traefik.http.routers.traefik.rule=Host(`traefik.${DOMAIN}`)
+      - traefik.http.routers.traefik.entrypoints=https
+      - traefik.http.routers.traefik.service=api@internal
+      - traefik.http.routers.traefik.tls=true
+      - traefik.http.routers.traefik.tls.certresolver=${CERT_RESOLVER}
+      - traefik.http.middlewares.to-https.redirectscheme.scheme=https
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./data/letsencrypt:/letsencrypt
+      - /var/run/docker.sock:/var/run/docker.sock:ro
 
 volumes:
   tv-images:
