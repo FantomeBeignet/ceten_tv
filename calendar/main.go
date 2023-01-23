@@ -266,7 +266,7 @@ func MakeImage() {
 	if err != nil {
 		log.Fatalf("Unable to run command: %v", err)
 	} else {
-		err = os.Remove("../images/" + imageName)
+		err = os.Remove("/app/images/" + imageName)
 		if err != nil {
 			log.Printf("Unable to remove image: %v", err)
 		}
@@ -275,7 +275,7 @@ func MakeImage() {
 			log.Fatalf("Unable to write file: %v", err)
 		}
 		oldImageName := fmt.Sprintf("Agenda_%s.png", WeekStart(time.Now().AddDate(0, 0, -7)).Format("20060102"))
-		err := os.Rename(imageName, "../images/"+imageName)
+		err := os.Rename(imageName, "/app/images/"+imageName)
 		if err != nil {
 			log.Printf("Unable to remove image: %v", err)
 		}
@@ -285,11 +285,11 @@ func MakeImage() {
 			log.Printf("Unable to remove file: %v", err)
 		}
 		log.Println("Removing template file:", "agenda.html")
-		err = os.Remove("../images/" + oldImageName)
+		err = os.Remove("/app/images/" + oldImageName)
 		if err != nil {
 			log.Printf("Unable to rename image: %v", err)
 		}
-		log.Println("Moving image into images folder:", "../images/"+imageName)
+		log.Println("Moving image into images folder:", "/app/images/"+imageName)
 	}
 }
 
