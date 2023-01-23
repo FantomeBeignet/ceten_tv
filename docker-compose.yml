@@ -8,3 +8,7 @@ services:
     ports:
       - 80:3000
       - 5173:5173
+
+  calendar:
+    build:
+      context: ./calendar
