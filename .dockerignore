@@ -1,0 +1,6 @@
+data
+.git
+.gitignore
+README.md
+.env
+client/node_modules
