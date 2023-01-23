@@ -28,5 +28,5 @@ images/*.png
 images/old/*.png
 
 # API Credentials
-calendar/credentials.json
-calendar/token.json
+calendar/config/credentials.json
+calendar/config/token.json
