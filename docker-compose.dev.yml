@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile.dev
+    restart: always
+    volumes:
+      - tv-images-dev:/app/images
+      - ./client/src:/app/src
+      - ./client/static:/app/static
+      - ./client/svelte.config.js:/app/svelte.config.js
+      - ./client/tsconfig.json:/app/tsconfig.json
+      - ./client/vite.config.ts:/app/vite.config.ts
+      - ./client/tailwind.config.cjs:/app/tailwind.config.cjs
+      - ./client/postcss.config.cjs:/app/postcss.config.cjs
+      - ./client/.prettierrc:/app/prettierrc
+      - ./client/.prettierignore:/app/prettierignore
+      - ./client/.eslintrc.cjs:/app/eslintrc.cjs
+      - ./client/.eslintignore:/app/eslintignore
+    ports:
+      - 5173:5173
+    command: npm run dev -- --host 0.0.0.0
+
+volumes:
+  tv-images-dev:
