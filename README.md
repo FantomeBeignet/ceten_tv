@@ -20,6 +20,14 @@ To make the Traefik reverse proxy work, you should put the following variables i
 - `EMAIL` should be the email address of the administrator of the server, used for Let's Encrypt
 - `CERT_RESOLVER` should be the name of the certificate resolver used by Traefik (letsencrypt is recommended)
 
+The client requires the following environment variables:
+
+- `GOOGLE_CLIENT_ID` should be the Google OAuth client ID
+- `GOOGLE_CLIENT_SECRET` should be the Google OAuth client secret
+- `AUTH_SECRET` should be a secret used to sign the authentication cookies. You can generate one with `openssl rand -hex 32`
+- `NEXTAUTH_URL` should be the URL of the server, with the protocol (e.g. `https://raspberry-cafet.telecomnancy.univ-lorraine.fr`)
+- `USER_WHITELIST` should be a semicolon-separated list of Google account IDs that can access the admin interface
+
 To make the automated calendar image generator work, you should put the `credentials.json` and `token.json` files from the Google Cloud Platform in the `calendar/config` folder.
 
 ## Usage
@@ -34,7 +42,7 @@ The slideshow is made of images in the `images` folder. The images are displayed
 
 ### Admin
 
-The admin interface is available on the `/admin` route. It allows you to upload images to display them on the TV, or hide displayed images.
+The admin interface is available on the `/admin` route. It allows you to upload images to display them on the TV, or hide displayed images. It is protected by Google OAuth, and only users in the `USER_WHITELIST` can access it.
 
 ### Traefik
 
