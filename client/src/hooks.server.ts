@@ -9,7 +9,7 @@ const authorize = (async ({ event, resolve }) => {
 	if (event.url.pathname.startsWith('/admin')) {
 		const session = await event.locals.getSession();
 		if (!session) {
-			throw redirect(303,'/auth/signin');
+			throw redirect(303, '/auth/signin');
 		}
 	}
 	const result = await resolve(event, {
@@ -18,28 +18,31 @@ const authorize = (async ({ event, resolve }) => {
 	return result;
 }) satisfies Handle;
 
-export const handle: Handle = sequence(SvelteKitAuth({
-	// @ts-ignore
-	providers: [GoogleProvider({ clientId: GOOGLE_CLIENT_ID, clientSecret: GOOGLE_CLIENT_SECRET })],
-	callbacks: {
-		async jwt({ token, profile }) {
-			if (profile) {
-				token = { ...token, sub: profile.sub };
+export const handle: Handle = sequence(
+	SvelteKitAuth({
+		// @ts-ignore
+		providers: [GoogleProvider({ clientId: GOOGLE_CLIENT_ID, clientSecret: GOOGLE_CLIENT_SECRET })],
+		callbacks: {
+			async jwt({ token, profile }) {
+				if (profile) {
+					token = { ...token, sub: profile.sub };
+				}
+				return token;
+			},
+			async session({ session, token }) {
+				if (session?.user) {
+					const user = { ...session.user, id: token.sub };
+					session.user = user;
+				}
+				return session;
+			},
+			async signIn({ user }) {
+				if (USER_WHITELIST.split(';').includes(user.id)) {
+					return true;
+				}
+				return false;
 			}
-			return token;
-		},
-		async session({ session, token }) {
-			if (session?.user) {
-				const user = { ...session.user, id: token.sub };
-				session.user = user;
-			}
-			return session;
-		},
-		async signIn({ user }) {
-			if (USER_WHITELIST.split(';').includes(user.id)) {
-				return true;
-			}
-			return false;
 		}
-	}
-}), authorize);
+	}),
+	authorize
+);
