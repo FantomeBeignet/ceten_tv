@@ -3,3 +3,4 @@ data
 .gitignore
 README.md
 client/node_modules
+.env.*
