@@ -3,6 +3,7 @@ import GoogleProvider from '@auth/core/providers/google';
 import { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, USER_WHITELIST } from '$env/static/private';
 
 export const handle = SvelteKitAuth({
+	// @ts-ignore
 	providers: [GoogleProvider({ clientId: GOOGLE_CLIENT_ID, clientSecret: GOOGLE_CLIENT_SECRET })],
 	callbacks: {
 		async jwt({ token, profile }) {
