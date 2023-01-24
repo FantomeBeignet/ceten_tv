@@ -15,10 +15,10 @@ services:
       - ./client/vite.config.ts:/app/vite.config.ts
       - ./client/tailwind.config.cjs:/app/tailwind.config.cjs
       - ./client/postcss.config.cjs:/app/postcss.config.cjs
-      - ./client/.prettierrc:/app/prettierrc
-      - ./client/.prettierignore:/app/prettierignore
+      - ./client/.prettierrc:/app/.prettierrc
+      - ./client/.prettierignore:/app/.prettierignore
       - ./client/.eslintrc.cjs:/app/eslintrc.cjs
-      - ./client/.eslintignore:/app/eslintignore
+      - ./client/.eslintignore:/app/.eslintignore
       - ./client/node_modules:/app/node_modules
     ports:
       - 5173:5173
