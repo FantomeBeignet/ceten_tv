@@ -6,8 +6,6 @@ services:
       context: ./client
       dockerfile: Dockerfile.dev
     restart: always
-    env_file:
-      - .env.client
     volumes:
       - tv-images-dev:/app/images
       - ./client/src:/app/src

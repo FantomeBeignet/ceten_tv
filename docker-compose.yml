@@ -5,8 +5,12 @@ services:
     build:
       context: ./client
       dockerfile: Dockerfile
-    env_file:
-      - .env.client
+      args:
+        - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+        - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+        - AUTH_SECRET=${AUTH_SECRET}
+        - NEXTAUTH_URL=${NEXTAUTH_URL}
+        - USER_WHITELIST=${USER_WHITELIST}
     volumes:
       - tv-images:/app/images
     labels:
