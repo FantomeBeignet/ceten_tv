@@ -32,5 +32,5 @@ calendar/config/credentials.json
 calendar/config/token.json
 
 # Dotenv
-.env
+.env.*
 data/

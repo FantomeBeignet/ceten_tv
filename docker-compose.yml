@@ -5,6 +5,8 @@ services:
     build:
       context: ./client
       dockerfile: Dockerfile
+    env_file:
+      - .env.client
     volumes:
       - tv-images:/app/images
     labels:

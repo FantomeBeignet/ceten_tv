@@ -3,6 +3,11 @@ FROM node:19-alpine as build
 
 WORKDIR /app
 
+ENV GOOGLE_CLIENT_ID=
+ENV GOOGLE_CLIENT_SECRET=
+ENV AUTH_SECRET=
+ENV USER_WHITELIST=
+
 COPY package*.json ./
 
 RUN npm ci
