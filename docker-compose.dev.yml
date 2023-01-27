@@ -17,12 +17,66 @@ services:
       - ./client/postcss.config.cjs:/app/postcss.config.cjs
       - ./client/.prettierrc:/app/.prettierrc
       - ./client/.prettierignore:/app/.prettierignore
-      - ./client/.eslintrc.cjs:/app/eslintrc.cjs
+      - ./client/.eslintrc.cjs:/app/.eslintrc.cjs
       - ./client/.eslintignore:/app/.eslintignore
       - ./client/node_modules:/app/node_modules
     ports:
       - 5173:5173
-    command: npm run dev -- --host 0.0.0.0
+    command: npm run dev -- --host 0.0.0.0 
+    labels:
+      # Enable Traefik
+      - traefik.enable=true
+      - traefik.http.services.client.loadbalancer.server.port=5173
+      # Enable HTTP
+      - traefik.http.routers.client_http.entrypoints=http
+      - traefik.http.routers.client_http.rule=PathPrefix(`/`)
+      - traefik.http.routers.client_http.service=client
+      # Enable HTTPS
+      - traefik.http.routers.client_https.entrypoints=https
+      - traefik.http.routers.client_https.rule=PathPrefix(`/`)
+      - traefik.http.routers.client_https.service=client
+      - traefik.http.routers.client_https.tls=true
+
+  calendar:
+    build:
+      context: ./calendar
+      dockerfile: Dockerfile
+    volumes:
+      - tv-images-dev:/app/images
+
+  traefik:
+    image: traefik:latest
+    restart: always
+    command:
+      - --entrypoints.http.address=:80
+      - --entrypoints.https.address=:443
+      - --providers.docker=true
+      - --api.insecure=true
+
+      - --certificatesresolvers.letsencrypt.acme.httpchallenge=true
+      - --certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=http
+      - --certificatesresolvers.letsencrypt.acme.email=${EMAIL}
+      - --certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json
+
+    labels:
+      # Redirect all HTTP traffic to HTTPS
+      - traefik.http.middlewares.to-https.redirectscheme.scheme=https
+      - traefik.http.routers.to-https.rule=HostRegexp(`{host:.+}`)
+      - traefik.http.routers.to-https.entrypoints=http
+      - traefik.http.routers.to-https.middlewares=to-https
+
+      # Make the Traefik dashboard available at https://traefik.${DOMAIN}
+      - traefik.http.routers.traefik.rule=Host(`traefik.${DOMAIN}`)
+      - traefik.http.routers.traefik.entrypoints=https
+      - traefik.http.routers.traefik.service=api@internal
+      - traefik.http.routers.traefik.tls=true
+      - traefik.http.routers.traefik.tls.certresolver=${CERT_RESOLVER}
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./data/letsencrypt:/letsencrypt
+      - /var/run/docker.sock:/var/run/docker.sock:ro
 
 volumes:
   tv-images-dev:
