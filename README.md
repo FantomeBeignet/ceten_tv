@@ -54,4 +54,4 @@ The Traefik dashboard is available on the `https://traefik.DOMAIN` route.
 
 ## Development
 
-A development environment for the SvelteKit app is available with Docker Compose. To start it, run `docker-compose -f docker-compose.dev.yml up -d`. The app will be available on the `http://localhost:5173` route.
+A development environment is available with Docker Compose. To start it, run `docker-compose -f docker-compose.dev.yml up -d`. The app will be available the same way as in production, with everything running on `localhost` and hot module reloading working.
