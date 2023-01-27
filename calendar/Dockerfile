@@ -3,11 +3,11 @@ FROM golang:1.19-alpine as build
 
 WORKDIR /app
 
-COPY go.mod go.sum ./
+COPY imagegen/go.mod imagegen/go.sum ./
 
 RUN go mod download && go mod verify
 
-COPY [^config]* .
+COPY imagegen/* .
 
 RUN go build -v -o /app/calendar .
 
