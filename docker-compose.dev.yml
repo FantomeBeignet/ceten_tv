@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile.dev
     restart: always
     volumes:
-      - tv-images-dev:/app/images
+      - ./data/images:/app/images
       - ./client/src:/app/src
       - ./client/static:/app/static
       - ./client/svelte.config.js:/app/svelte.config.js
@@ -42,7 +42,7 @@ services:
       context: ./calendar
       dockerfile: Dockerfile
     volumes:
-      - tv-images-dev:/app/images
+      - ./data/images:/app/images
 
   traefik:
     image: traefik:latest
@@ -77,6 +77,3 @@ services:
     volumes:
       - ./data/letsencrypt:/letsencrypt
       - /var/run/docker.sock:/var/run/docker.sock:ro
-
-volumes:
-  tv-images-dev:
