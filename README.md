@@ -28,7 +28,7 @@ The client requires the following environment variables:
 - `NEXTAUTH_URL` should be the URL of the server, with the protocol (e.g. `https://raspberry-cafet.telecomnancy.univ-lorraine.fr`)
 - `USER_WHITELIST` should be a semicolon-separated list of Google account IDs that can access the admin interface
 
-Redis (used to remember wich images are displayed or hidder) requires the following environment variables:
+Redis (used to remember wich images are displayed or hidden) requires the following environment variables:
 
 - `REDIS_PASSWORD` should be the password of the Redis server. You can generate one with `openssl rand -base64 32`
 
