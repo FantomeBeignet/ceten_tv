@@ -31,11 +31,13 @@ services:
       - traefik.http.routers.client_http.entrypoints=http
       - traefik.http.routers.client_http.rule=PathPrefix(`/`)
       - traefik.http.routers.client_http.service=client
-      # Enable HTTPS
-      - traefik.http.routers.client_https.entrypoints=https
-      - traefik.http.routers.client_https.rule=PathPrefix(`/`)
-      - traefik.http.routers.client_https.service=client
-      - traefik.http.routers.client_https.tls=true
+    environment:
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - AUTH_SECRET=${AUTH_SECRET}
+      - NEXTAUTH_URL=http://localhost/
+      - NEXTAUTH_URL_INTERNAL=http://localhost/
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
 
   calendar:
     build:
@@ -56,31 +58,14 @@ services:
     restart: always
     command:
       - --entrypoints.http.address=:80
-      - --entrypoints.https.address=:443
       - --providers.docker=true
       - --api.insecure=true
-
-      - --certificatesresolvers.letsencrypt.acme.httpchallenge=true
-      - --certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=http
-      - --certificatesresolvers.letsencrypt.acme.email=${EMAIL}
-      - --certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json
-
     labels:
-      # Redirect all HTTP traffic to HTTPS
-      - traefik.http.middlewares.to-https.redirectscheme.scheme=https
-      - traefik.http.routers.to-https.rule=HostRegexp(`{host:.+}`)
-      - traefik.http.routers.to-https.entrypoints=http
-      - traefik.http.routers.to-https.middlewares=to-https
-
-      # Make the Traefik dashboard available at https://traefik.${DOMAIN}
+      # Make the Traefik dashboard available at http://traefik.${DOMAIN}
       - traefik.http.routers.traefik.rule=Host(`traefik.${DOMAIN}`)
-      - traefik.http.routers.traefik.entrypoints=https
+      - traefik.http.routers.traefik.entrypoints=http
       - traefik.http.routers.traefik.service=api@internal
-      - traefik.http.routers.traefik.tls=true
-      - traefik.http.routers.traefik.tls.certresolver=${CERT_RESOLVER}
     ports:
       - 80:80
-      - 443:443
     volumes:
-      - ./data/letsencrypt:/letsencrypt
       - /var/run/docker.sock:/var/run/docker.sock:ro
