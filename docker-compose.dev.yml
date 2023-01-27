@@ -44,6 +44,13 @@ services:
     volumes:
       - ./data/images:/app/images
 
+  redis:
+    image: redis:alpine
+    restart: always
+    volumes:
+      - ./data/redis:/data
+    command: redis-server --save 60 1 --appendonly yes --requirepass ${REDIS_PASSWORD}
+
   traefik:
     image: traefik:latest
     restart: always
