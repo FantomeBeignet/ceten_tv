@@ -128,7 +128,7 @@ func GetEvents() []Event {
 		log.Fatalf("Unable to retrieve Calendar client: %v", err)
 	}
 	// Gets Calendar corresponding to "Agenda des Associations"
-	calendar, err := srv.CalendarList.Get("esial.net_og2ar8u1hdq3mh4v8komg5sbpg@group.calendar.google.com").Do()
+	calendar, err := srv.CalendarList.Get(os.Getenv("CALENDAR_URL")).Do()
 	if err != nil {
 		log.Fatalf("Unable to retrieve Calendar: %v", err)
 	}

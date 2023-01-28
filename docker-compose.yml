@@ -33,6 +33,8 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./data/images:/app/images
+    environment:
+      - CALENDAR_URL=${CALENDAR_URL}
 
   redis:
     image: redis:alpine
