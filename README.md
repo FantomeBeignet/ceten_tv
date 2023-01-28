@@ -33,6 +33,7 @@ Redis (used to remember wich images are displayed or hidden) requires the follow
 - `REDIS_PASSWORD` should be the password of the Redis server. You can generate one with `openssl rand -base64 32`
 
 To make the automated calendar image generator work, you should put the `credentials.json` and `token.json` files from the Google Cloud Platform in the `calendar/config` folder.
+You also need to set the `CALENDAR_URL` environment variable to the URL of the calendar to use.
 
 ## Usage
 
