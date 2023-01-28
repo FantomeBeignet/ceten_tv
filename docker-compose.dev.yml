@@ -8,6 +8,7 @@ services:
     restart: always
     volumes:
       - ./data/images:/app/images
+      - ./data/logs:/app/logs
       - ./client/src:/app/src
       - ./client/static:/app/static
       - ./client/svelte.config.js:/app/svelte.config.js
@@ -45,6 +46,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./data/images:/app/images
+      - ./data/logs:/app/logs
     environment:
       - CALENDAR_URL=${CALENDAR_URL}
 

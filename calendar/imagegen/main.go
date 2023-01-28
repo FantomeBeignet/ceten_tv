@@ -294,7 +294,7 @@ func MakeImage() {
 }
 
 func main() {
-	logfile, err := os.OpenFile("agenda.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	logfile, err := os.OpenFile("/app/logs/agenda.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		log.Fatalf("Unable to open log file: %v", err)
 	}

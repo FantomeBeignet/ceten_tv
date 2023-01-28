@@ -13,6 +13,7 @@ services:
         - USER_WHITELIST=${USER_WHITELIST}
     volumes:
       - ./data/images:/app/images
+      - ./data/logs:/app/logs
     labels:
       # Enable Traefik
       - traefik.enable=true
@@ -33,6 +34,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./data/images:/app/images
+      - ./data/logs:/app/logs
     environment:
       - CALENDAR_URL=${CALENDAR_URL}
 
