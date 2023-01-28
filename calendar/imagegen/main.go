@@ -300,7 +300,14 @@ func main() {
 	}
 	defer logfile.Close()
 	log.SetOutput(logfile)
-	log.Println("Starting agenda")
+	mode := os.Args[1]
+	if mode == "programmed" {
+		log.Println("Starting programmed refresh")
+	} else if mode == "manual" {
+		log.Println("Starting manual refresh")
+	} else {
+		log.Fatalf("Invalid mode: %s", mode)
+	}
 	var htmlEvents []HTMLEvent
 	events := GetEvents()
 	if len(events) == 0 {
