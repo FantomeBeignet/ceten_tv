@@ -1,6 +1,11 @@
 import { SvelteKitAuth } from '@auth/sveltekit';
 import GoogleProvider from '@auth/core/providers/google';
-import { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, AUTH_SECRET, USER_WHITELIST } from '$env/static/private';
+import {
+	GOOGLE_CLIENT_ID,
+	GOOGLE_CLIENT_SECRET,
+	AUTH_SECRET,
+	USER_WHITELIST
+} from '$env/static/private';
 import { redirect } from '@sveltejs/kit';
 import type { Handle } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
@@ -20,6 +25,7 @@ const authorize = (async ({ event, resolve }) => {
 
 export const handle: Handle = sequence(
 	SvelteKitAuth({
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-ignore
 		providers: [GoogleProvider({ clientId: GOOGLE_CLIENT_ID, clientSecret: GOOGLE_CLIENT_SECRET })],
 		secret: AUTH_SECRET,
