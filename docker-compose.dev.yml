@@ -44,6 +44,7 @@ services:
     build:
       context: ./calendar
       dockerfile: Dockerfile
+    restart: unless-stopped
     volumes:
       - ./data/images:/app/images
       - ./data/logs:/app/logs
@@ -52,14 +53,14 @@ services:
 
   redis:
     image: redis:alpine
-    restart: always
+    restart: unless-stopped
     volumes:
       - ./data/redis:/data
     command: redis-server --save 60 1 --appendonly yes --requirepass ${REDIS_PASSWORD}
 
   traefik:
     image: traefik:latest
-    restart: always
+    restart: unless-stopped
     command:
       - --entrypoints.http.address=:80
       - --providers.docker=true

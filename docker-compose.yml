@@ -11,6 +11,7 @@ services:
         - AUTH_SECRET=${AUTH_SECRET}
         - NEXTAUTH_URL=${NEXTAUTH_URL}
         - USER_WHITELIST=${USER_WHITELIST}
+    restart: unless-stopped
     volumes:
       - ./data/images:/app/images
       - ./data/logs:/app/logs
@@ -32,6 +33,7 @@ services:
     build:
       context: ./calendar
       dockerfile: Dockerfile
+    restart: unless-stopped
     volumes:
       - ./data/images:/app/images
       - ./data/logs:/app/logs
@@ -40,13 +42,14 @@ services:
 
   redis:
     image: redis:alpine
-    restart: always
+    restart: unless-stopped
     volumes:
       - ./data/redis:/data
     command: redis-server --save 60 1 --appendonly yes --requirepass ${REDIS_PASSWORD}
 
   traefik:
     image: traefik:latest
+    restart: unless-stopped
     command:
       # Enable the web UI and API
       - --entrypoints.http.address=:80
