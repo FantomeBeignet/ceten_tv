@@ -1,0 +1,22 @@
+name: Client Actions
+defaults:
+  run:
+    working-directory: client
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Setup NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Install Node modules
+        run: npm ci
+      - name: Run linters
+        run: npm run lint
