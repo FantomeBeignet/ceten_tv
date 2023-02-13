@@ -9,6 +9,9 @@ import {
 import { redirect } from '@sveltejs/kit';
 import type { Handle } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
+import { createTRPCHandle } from 'trpc-sveltekit';
+import { router } from '$lib/trpc/router';
+import { createContext } from '$lib/trpc/context';
 
 const authorize = (async ({ event, resolve }) => {
 	if (event.url.pathname.startsWith('/admin')) {
@@ -22,6 +25,10 @@ const authorize = (async ({ event, resolve }) => {
 	});
 	return result;
 }) satisfies Handle;
+
+const url = '/api/trpc';
+
+export const trpcHandle: Handle = createTRPCHandle({ router, url, createContext });
 
 export const handle: Handle = sequence(
 	SvelteKitAuth({
@@ -51,5 +58,6 @@ export const handle: Handle = sequence(
 			}
 		}
 	}),
-	authorize
+	authorize,
+	trpcHandle
 );
