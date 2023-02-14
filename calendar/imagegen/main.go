@@ -277,17 +277,19 @@ func MakeImage() {
 		oldImageName := fmt.Sprintf("Agenda_%s.png", WeekStart(time.Now().AddDate(0, 0, -7)).Format("20060102"))
 		err := os.Rename(imageName, "/app/images/"+imageName)
 		if err != nil {
-			log.Printf("Unable to remove image: %v", err)
+			log.Printf("Unable to rename new image: %v", err)
 		}
-		log.Println("Deleting old image:", oldImageName)
-		err = os.Remove("agenda.html")
-		if err != nil {
-			log.Printf("Unable to remove file: %v", err)
+		if _, err := os.Stat("/app/images/" + oldImageName); err == nil {
+			log.Println("Deleting old image:", oldImageName)
+			err = os.Remove("agenda.html")
+			if err != nil {
+				log.Printf("Unable to remove file: %v", err)
+			}
 		}
 		log.Println("Removing template file:", "agenda.html")
 		err = os.Remove("/app/images/" + oldImageName)
 		if err != nil {
-			log.Printf("Unable to rename image: %v", err)
+			log.Printf("Unable to remove template file: %v", err)
 		}
 		log.Println("Moving image into images folder:", "/app/images/"+imageName)
 	}
