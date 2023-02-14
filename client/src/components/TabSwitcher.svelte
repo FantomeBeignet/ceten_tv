@@ -12,15 +12,16 @@
 </script>
 
 <div class="flex flex-col items-center justify-center p-16 gap-12">
-	<nav class="flex flex-row items-center justify-center rounded-md border-2 border-gray-700 divide-x-2 divide-gray-700 group">
+	<nav
+		class="flex flex-row items-center justify-center rounded-md border-2 border-gray-700 divide-x-2 divide-gray-700 group"
+	>
 		{#each tabNames as tabName, tabIndex}
 			{#if tabIndex === currentTabIndex}
-				<button class="flex items-center justify-center px-4 py-3 bg-gray-700"
-					>{tabName}</button
-				>
+				<button class="flex items-center justify-center px-4 py-3 bg-gray-700">{tabName}</button>
 			{:else}
-				<button class="flex items-center justify-center px-4 py-3 hover:bg-gray-700 hover:text-gray-200 text-gray-400" on:click={() => setCurrentTabIndex(tabIndex)}
-					>{tabName}</button
+				<button
+					class="flex items-center justify-center px-4 py-3 hover:bg-gray-700 hover:text-gray-200 text-gray-400"
+					on:click={() => setCurrentTabIndex(tabIndex)}>{tabName}</button
 				>
 			{/if}
 		{/each}

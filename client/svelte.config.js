@@ -10,7 +10,7 @@ const config = {
 	kit: {
 		adapter: adapterNode(),
 		alias: {
-			"$components": "src/components"
+			$components: 'src/components'
 		}
 	}
 };

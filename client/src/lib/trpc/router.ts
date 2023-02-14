@@ -3,7 +3,7 @@ import type { inferRouterInputs, inferRouterOutputs } from '@trpc/server';
 import { image } from '$lib/trpc/routes/image';
 
 export const router = t.router({
-    image
+	image
 });
 
 export type Router = typeof router;
