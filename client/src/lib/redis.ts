@@ -1,12 +1,10 @@
-import redis from 'redis';
+import Redis from 'ioredis';
 import { REDIS_PASSWORD } from '$env/static/private';
 
-const redisClient = redis.createClient({
+const redisClient = new Redis({
 	password: REDIS_PASSWORD,
-	socket: {
-		host: 'redis',
-		port: 6379
-	}
+	host: 'redis',
+	port: 6379
 });
 
 export default redisClient;

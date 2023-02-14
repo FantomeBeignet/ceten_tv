@@ -37,7 +37,7 @@
 		"@auth/sveltekit": "^0.1.12",
 		"@trpc/client": "^10.11.0",
 		"@trpc/server": "^10.11.0",
-		"redis": "^4.6.4",
+		"ioredis": "^5.3.1",
 		"trpc-sveltekit": "^3.2.9",
 		"zod": "^3.20.6"
 	}
