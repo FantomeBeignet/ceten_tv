@@ -6,7 +6,7 @@ ARG USER_WHITELIST
 ARG REDIS_PASSWORD
 
 ### Build Step
-FROM node:19-alpine as build
+FROM node:19 as build
 
 WORKDIR /app
 
@@ -34,7 +34,7 @@ COPY . .
 RUN npm run build
 
 ### Serve Step
-FROM node:19-alpine
+FROM node:19
 
 WORKDIR /app
 
