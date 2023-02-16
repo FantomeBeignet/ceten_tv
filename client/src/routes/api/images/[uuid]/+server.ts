@@ -18,5 +18,6 @@ export const POST = (async ({ params, request }) => {
 	const image = await (formData.get('image') as File).arrayBuffer();
 	await sharp(Buffer.from(image)).webp({ nearLossless: true }).toFile(`/app/images/${uuid}.webp`);
 	await redisClient.hset('names', uuid, path.parse(imageName).name);
+	await redisClient.sadd('visible', uuid)
 	return json({ result: 'ok' });
 }) satisfies RequestHandler;
