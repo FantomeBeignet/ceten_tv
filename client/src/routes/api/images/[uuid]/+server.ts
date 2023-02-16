@@ -1,6 +1,6 @@
 import type { RequestHandler } from './$types';
 import fs from 'node:fs';
-import path from 'node:path'
+import path from 'node:path';
 import sharp from 'sharp';
 import { json } from '@sveltejs/kit';
 import redisClient from '$lib/redis';
@@ -18,6 +18,6 @@ export const POST = (async ({ params, request }) => {
 	const image = await (formData.get('image') as File).arrayBuffer();
 	await sharp(Buffer.from(image)).webp({ nearLossless: true }).toFile(`/app/images/${uuid}.webp`);
 	await redisClient.hset('names', uuid, path.parse(imageName).name);
-	await redisClient.sadd('visible', uuid)
+	await redisClient.zadd('visible', '+inf', uuid);
 	return json({ result: 'ok' });
 }) satisfies RequestHandler;
