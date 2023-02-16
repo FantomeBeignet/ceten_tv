@@ -1,27 +1,36 @@
 import { t } from '$lib/trpc/t';
 import { z } from 'zod';
 import redisClient from '$lib/redis';
+import { TRPCError } from '@trpc/server';
 
 export const image = t.router({
 	add: t.procedure.input(z.string().uuid()).mutation(async ({ input }) => {
 		const res = await redisClient.zadd('visible', '+inf', input);
 		return res;
 	}),
-	remove: t.procedure.input(z.string().uuid()).mutation(async ({ input }) => {	
+	remove: t.procedure.input(z.string().uuid()).mutation(async ({ input }) => {
+		if ((await redisClient.zrank('visible', input)) === null)
+			throw new TRPCError({ code: 'NOT_FOUND', message: 'Image not found' });
 		const res = await redisClient.zrem('visible', input);
 		return res;
 	}),
 	show: t.procedure.input(z.string().uuid()).mutation(async ({ input }) => {
+		if ((await redisClient.zrank('visible', input)) === null)
+			throw new TRPCError({ code: 'NOT_FOUND', message: 'Image not found' });
 		const res = await redisClient.zadd('visible', '+inf', input);
 		return res;
 	}),
 	showUntil: t.procedure
 		.input(z.object({ uuid: z.string().uuid(), date: z.number().int() }))
 		.mutation(async ({ input }) => {
+			if ((await redisClient.zrank('visible', input.uuid)) === null)
+				throw new TRPCError({ code: 'NOT_FOUND', message: 'Image not found' });
 			const res = await redisClient.zadd('visible', input.date, input.uuid);
 			return res;
 		}),
 	hide: t.procedure.input(z.string().uuid()).mutation(async ({ input }) => {
+		if ((await redisClient.zrank('visible', input)) === null)
+			throw new TRPCError({ code: 'NOT_FOUND', message: 'Image not found' });
 		const res = await redisClient.zadd('visible', '-inf', input);
 		return res;
 	}),
