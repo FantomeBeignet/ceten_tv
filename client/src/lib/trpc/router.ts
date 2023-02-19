@@ -11,4 +11,4 @@ export type Router = typeof router;
 export type RouterInputs = inferRouterInputs<Router>;
 export type RouterOutputs = inferRouterOutputs<Router>;
 
-export const caller = router.createCaller({})
+export const caller = router.createCaller({});
