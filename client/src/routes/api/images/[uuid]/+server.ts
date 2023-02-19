@@ -2,7 +2,7 @@ import type { RequestHandler } from './$types';
 import fs from 'node:fs';
 import path from 'node:path';
 import sharp from 'sharp';
-import { json } from '@sveltejs/kit';
+import { error, json } from '@sveltejs/kit';
 import { caller } from '$lib/trpc/router';
 
 export const GET = (async ({ params }) => {
@@ -17,6 +17,7 @@ export const POST = (async ({ params, request }) => {
 	const imageName = (formData.get('image') as File).name;
 	const image = await (formData.get('image') as File).arrayBuffer();
 	await sharp(Buffer.from(image)).webp({ nearLossless: true }).toFile(`/app/images/${uuid}.webp`);
-	await caller.image.add({ uuid: uuid, name: path.parse(imageName).name });
-	return json({ result: 'ok' });
+	const res = await caller.image.add({ uuid: uuid, name: path.parse(imageName).name });
+	if (res === 1) return json({ result: 'ok' });
+	else throw error(500);
 }) satisfies RequestHandler;
