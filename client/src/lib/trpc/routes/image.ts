@@ -4,13 +4,27 @@ import redisClient from '$lib/redis';
 import { TRPCError } from '@trpc/server';
 
 export const image = t.router({
-	add: t.procedure.input(z.string().uuid()).mutation(async ({ input }) => {
-		const res = await redisClient.zadd('visible', '+inf', input);
-		return res;
-	}),
+	add: t.procedure
+		.input(
+			z.object({
+				uuid: z.string().uuid(),
+				name: z.string()
+			})
+		)
+		.mutation(async ({ input }) => {
+			let res = await redisClient.hsetnx('names', input.uuid, input.name);
+			if (res === 0)
+				throw new TRPCError({
+					code: 'CONFLICT',
+					message: 'An image with this key already exists'
+				});
+			res = await redisClient.zadd('visible', '+inf', input.uuid);
+			return res;
+		}),
 	remove: t.procedure.input(z.string().uuid()).mutation(async ({ input }) => {
 		if ((await redisClient.zrank('visible', input)) === null)
 			throw new TRPCError({ code: 'NOT_FOUND', message: 'Image not found' });
+		await redisClient.hdel('names', input);
 		const res = await redisClient.zrem('visible', input);
 		return res;
 	}),
@@ -21,7 +35,12 @@ export const image = t.router({
 		return res;
 	}),
 	showUntil: t.procedure
-		.input(z.object({ uuid: z.string().uuid(), date: z.number().int() }))
+		.input(
+			z.object({
+				uuid: z.string().uuid(),
+				date: z.number().int()
+			})
+		)
 		.mutation(async ({ input }) => {
 			if ((await redisClient.zrank('visible', input.uuid)) === null)
 				throw new TRPCError({ code: 'NOT_FOUND', message: 'Image not found' });
