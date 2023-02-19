@@ -4,6 +4,7 @@ go 1.18
 
 require (
 	github.com/chromedp/chromedp v0.8.7
+	github.com/redis/go-redis/v9 v9.0.2
 	golang.org/x/oauth2 v0.4.0
 	google.golang.org/api v0.108.0
 )
@@ -25,11 +26,10 @@ require (
 	github.com/googleapis/gax-go/v2 v2.7.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
-	github.com/redis/go-redis/v9 v9.0.2 // indirect
 	go.opencensus.io v0.24.0 // indirect
-	golang.org/x/net v0.5.0 // indirect
-	golang.org/x/sys v0.4.0 // indirect
-	golang.org/x/text v0.6.0 // indirect
+	golang.org/x/net v0.7.0 // indirect
+	golang.org/x/sys v0.5.0 // indirect
+	golang.org/x/text v0.7.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/genproto v0.0.0-20230127162408-596548ed4efa // indirect
 	google.golang.org/grpc v1.52.3 // indirect
