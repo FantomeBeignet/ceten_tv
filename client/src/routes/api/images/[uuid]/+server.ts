@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import sharp from 'sharp';
 import { json } from '@sveltejs/kit';
-import redisClient from '$lib/redis';
+import { caller } from '$lib/trpc/router';
 
 export const GET = (async ({ params }) => {
 	const uuid = params.uuid;
@@ -17,7 +17,6 @@ export const POST = (async ({ params, request }) => {
 	const imageName = (formData.get('image') as File).name;
 	const image = await (formData.get('image') as File).arrayBuffer();
 	await sharp(Buffer.from(image)).webp({ nearLossless: true }).toFile(`/app/images/${uuid}.webp`);
-	await redisClient.hset('names', uuid, path.parse(imageName).name);
-	await redisClient.zadd('visible', '+inf', uuid);
+	await caller.image.add({ uuid: uuid, name: path.parse(imageName).name });
 	return json({ result: 'ok' });
 }) satisfies RequestHandler;
