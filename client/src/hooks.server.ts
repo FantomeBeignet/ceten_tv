@@ -51,6 +51,7 @@ export const handle: Handle = sequence(
 				return session;
 			},
 			async signIn({ user }) {
+				if (process.env.NODE_ENV === 'development') return true;
 				if (USER_WHITELIST.split(';').includes(user.id)) {
 					return true;
 				}
