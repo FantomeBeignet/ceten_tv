@@ -2,17 +2,14 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"html/template"
 	"log"
-	"net/http"
 	"os"
 	"strings"
 	"time"
 
 	"github.com/chromedp/chromedp"
-	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
 	"google.golang.org/api/calendar/v3"
 	"google.golang.org/api/option"
@@ -37,61 +34,6 @@ type TemplateData struct {
 	Events []HTMLEvent
 	Day    int
 	Days   []string
-}
-
-// Retrieve a token, saves the token, then returns the generated client.
-func getClient(config *oauth2.Config) *http.Client {
-	// The file token.json stores the user's access and refresh tokens, and is
-	// created automatically when the authorization flow completes for the first
-	// time.
-	tokFile := "token.json"
-	tok, err := tokenFromFile(tokFile)
-	if err != nil {
-		tok = getTokenFromWeb(config)
-		saveToken(tokFile, tok)
-	}
-	return config.Client(context.Background(), tok)
-}
-
-// Request a token from the web, then returns the retrieved token.
-func getTokenFromWeb(config *oauth2.Config) *oauth2.Token {
-	authURL := config.AuthCodeURL("state-token", oauth2.AccessTypeOffline)
-	fmt.Printf("Go to the following link in your browser then type the "+
-		"authorization code: \n%v\n", authURL)
-
-	var authCode string
-	if _, err := fmt.Scan(&authCode); err != nil {
-		log.Fatalf("Unable to read authorization code: %v", err)
-	}
-
-	tok, err := config.Exchange(context.TODO(), authCode)
-	if err != nil {
-		log.Fatalf("Unable to retrieve token from web: %v", err)
-	}
-	return tok
-}
-
-// Retrieves a token from a local file.
-func tokenFromFile(file string) (*oauth2.Token, error) {
-	f, err := os.Open(file)
-	if err != nil {
-		return nil, err
-	}
-	defer f.Close()
-	tok := &oauth2.Token{}
-	err = json.NewDecoder(f).Decode(tok)
-	return tok, err
-}
-
-// Saves a token to a file path.
-func saveToken(path string, token *oauth2.Token) {
-	fmt.Printf("Saving credential file to: %s\n", path)
-	f, err := os.OpenFile(path, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0600)
-	if err != nil {
-		log.Fatalf("Unable to cache oauth token: %v", err)
-	}
-	defer f.Close()
-	json.NewEncoder(f).Encode(token)
 }
 
 func WeekStart(day time.Time) time.Time {
@@ -138,7 +80,9 @@ func GetEvents() []Event {
 	weekEnd := weekStart.AddDate(0, 0, 5)
 	// Gets events for the current week from the calendar, from earliest to latest
 	events, err := srv.Events.List(calId).ShowDeleted(false).
-		SingleEvents(true).TimeMin(weekStart.Format(time.RFC3339)).TimeMax(weekEnd.Format(time.RFC3339)).OrderBy("startTime").Do()
+		SingleEvents(true).
+		TimeMin(weekStart.Format(time.RFC3339)).
+		TimeMax(weekEnd.Format(time.RFC3339)).OrderBy("startTime").Do()
 	if err != nil {
 		log.Fatalf("Unable to retrieve next ten of the user's events: %v", err)
 	}
@@ -188,7 +132,8 @@ func GetEvents() []Event {
 		first := &returnEvents[index]
 		second := &returnEvents[index+1]
 		// If two events overlap
-		if first.Day == second.Day && first.Start.Before(second.Start.Add(second.Duration)) && second.Start.Before(first.Start.Add(first.Duration)) {
+		if first.Day == second.Day && first.Start.Before(second.Start.Add(second.Duration)) &&
+			second.Start.Before(first.Start.Add(first.Duration)) {
 			// Set both events as half width
 			first.Half = true
 			second.Half = true
@@ -216,7 +161,15 @@ func GetHTMLEvent(e Event) HTMLEvent {
 	} else {
 		bis = ""
 	}
-	classes := fmt.Sprintf("calendar-event-card day-%d%s start-%s duration-%s %s %s", e.Day, bis, fmt.Sprintf("%d%d", e.Start.Hour(), e.Start.Minute()), fmt.Sprintf("%d", int(e.Duration.Minutes())), e.Assoc, half)
+	classes := fmt.Sprintf(
+		"calendar-event-card day-%d%s start-%s duration-%s %s %s",
+		e.Day,
+		bis,
+		fmt.Sprintf("%d%d", e.Start.Hour(), e.Start.Minute()),
+		fmt.Sprintf("%d", int(e.Duration.Minutes())),
+		e.Assoc,
+		half,
+	)
 	return HTMLEvent{e.Summary, classes}
 }
 
@@ -257,7 +210,7 @@ func MakeImage() {
 		log.Fatalf("Unable to get working directory: %v", err)
 	}
 	var buf []byte
-	var screenshot = chromedp.Tasks{
+	screenshot := chromedp.Tasks{
 		chromedp.Navigate(fmt.Sprintf("file://%s/agenda.html", path)), // Load file into browser
 		chromedp.EmulateViewport(1920, 1080),                          // Set viewport to 1920x1080
 		chromedp.FullScreenshot(&buf, 100),                            // Take screenshot
@@ -303,31 +256,28 @@ func MakeImage() {
 	}
 }
 
-func main() {
-	logfile, err := os.OpenFile("/app/logs/agenda.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
-	if err != nil {
-		log.Fatalf("Unable to open log file: %v", err)
-	}
-	defer logfile.Close()
-	log.SetOutput(logfile)
-	mode := os.Args[1]
-	if mode == "programmed" {
-		log.Println("Starting programmed refresh")
-	} else if mode == "manual" {
-		log.Println("Starting manual refresh")
-	} else {
-		log.Fatalf("Invalid mode: %s", mode)
-	}
+func RefreshCalendar() {
 	var htmlEvents []HTMLEvent
 	events := GetEvents()
 	if len(events) == 0 {
 		log.Printf("No events found")
 	}
 	for _, item := range events {
-		log.Printf("Event: %s\n-Day: %d\n-Start time: %s\n-Duration %s\nAssoc: %s\n", item.Summary, item.Day, item.Start, item.Duration, item.Assoc)
+		log.Printf(
+			"Event: %s\n-Day: %d\n-Start time: %s\n-Duration %s\nAssoc: %s\n",
+			item.Summary,
+			item.Day,
+			item.Start,
+			item.Duration,
+			item.Assoc,
+		)
 		htmlEvents = append(htmlEvents, GetHTMLEvent(item))
 	}
-	data := TemplateData{htmlEvents, int(time.Now().Weekday() - 1), []string{"Lun.", "Mar.", "Mer.", "Jeu.", "Ven."}}
+	data := TemplateData{
+		htmlEvents,
+		int(time.Now().Weekday() - 1),
+		[]string{"Lun.", "Mar.", "Mer.", "Jeu.", "Ven."},
+	}
 	FillTemplate(data)
 	MakeImage()
 }
