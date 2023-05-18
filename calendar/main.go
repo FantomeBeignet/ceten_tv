@@ -11,6 +11,7 @@ import (
 )
 
 func RefreshFromRequest(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	log.Println("Manual refresh of calendar")
 	RefreshCalendar()
 }
 
@@ -23,7 +24,10 @@ func main() {
 	log.SetOutput(logfile)
 
 	s := gocron.NewScheduler(time.UTC)
-	s.Every(1).Days().At("7:00;12:00;17:00").Do(RefreshCalendar)
+	s.Every(1).Days().At("7:00;12:00;17:00").Do(func() {
+		log.Println("Programmed refresh of calendar")
+		RefreshCalendar()
+	})
 	s.StartAsync()
 
 	router := httprouter.New()
