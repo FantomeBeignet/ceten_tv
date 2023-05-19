@@ -22,6 +22,13 @@ jobs:
         run: npm run lint
   build:
     runs-on: ubuntu-latest
+    env:
+      GOOGLE_CLIENT_ID: "action_client_id" 
+      GOOGLE_CLIENT_SECRET: "action_client_secret"
+      AUTH_SECRET: "action_auth_secret"
+      NEXTAUTH_URL: "action_nextauth_url"
+      USER_WHITELIST: "action_user_whitelist"
+      REDIS_PASSWORD: "client_redis_password"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
