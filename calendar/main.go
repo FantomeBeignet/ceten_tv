@@ -10,7 +10,7 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-func RefreshFromRequest(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+func refreshFromRequest(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	log.Println("Manual refresh of calendar")
 	RefreshCalendar()
 }
@@ -31,6 +31,6 @@ func main() {
 	s.StartAsync()
 
 	router := httprouter.New()
-	router.GET("/", RefreshFromRequest)
+	router.GET("/", refreshFromRequest)
 	log.Fatal(http.ListenAndServe(":8080", router))
 }

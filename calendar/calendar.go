@@ -15,7 +15,7 @@ import (
 	"google.golang.org/api/option"
 )
 
-type Event struct {
+type event struct {
 	Summary  string
 	Day      int
 	Start    time.Time
@@ -25,18 +25,18 @@ type Event struct {
 	Side     bool
 }
 
-type HTMLEvent struct {
+type htmlEvent struct {
 	Summary string
 	Classes string
 }
 
-type TemplateData struct {
-	Events []HTMLEvent
+type templateData struct {
+	Events []htmlEvent
 	Day    int
 	Days   []string
 }
 
-func WeekStart(day time.Time) time.Time {
+func weekStart(day time.Time) time.Time {
 	year, week := day.ISOWeek()
 	// Start from the middle of the year:
 	t := time.Date(year, 7, 1, 0, 0, 0, 0, time.UTC)
@@ -52,7 +52,7 @@ func WeekStart(day time.Time) time.Time {
 	return t
 }
 
-func GetEvents() []Event {
+func getEvents() []event {
 	ctx := context.Background()
 	b, err := os.ReadFile("credentials.json")
 	if err != nil {
@@ -74,19 +74,19 @@ func GetEvents() []Event {
 	if err != nil {
 		log.Fatalf("Unable to retrieve Calendar: %v", err)
 	}
-	calId := calendar.Id
+	calID := calendar.Id
 
-	weekStart := WeekStart(time.Now())
+	weekStart := weekStart(time.Now())
 	weekEnd := weekStart.AddDate(0, 0, 5)
 	// Gets events for the current week from the calendar, from earliest to latest
-	events, err := srv.Events.List(calId).ShowDeleted(false).
+	events, err := srv.Events.List(calID).ShowDeleted(false).
 		SingleEvents(true).
 		TimeMin(weekStart.Format(time.RFC3339)).
 		TimeMax(weekEnd.Format(time.RFC3339)).OrderBy("startTime").Do()
 	if err != nil {
 		log.Fatalf("Unable to retrieve next ten of the user's events: %v", err)
 	}
-	var returnEvents []Event
+	var returnEvents []event
 	for _, item := range events.Items {
 		summary := item.Summary
 		start, err := time.Parse(time.RFC3339, item.Start.DateTime)
@@ -104,28 +104,28 @@ func GetEvents() []Event {
 		start = start.Round(rounding)
 		end = end.Round(rounding)
 		duration := end.Sub(start).Round(rounding)
-		summary_lower := strings.ToLower(summary)
+		summaryLower := strings.ToLower(summary)
 		assoc := ""
 		switch {
-		case strings.Contains(summary_lower, "bds"):
+		case strings.Contains(summaryLower, "bds"):
 			assoc = "bds"
-		case strings.Contains(summary_lower, "humani"):
+		case strings.Contains(summaryLower, "humani"):
 			assoc = "humanitn"
-		case strings.Contains(summary_lower, "anim'est"):
+		case strings.Contains(summaryLower, "anim'est"):
 			assoc = "animest"
-		case strings.Contains(summary_lower, "tns"):
+		case strings.Contains(summaryLower, "tns"):
 			assoc = "tns"
 		default:
 			assoc = "ceten"
 		}
 		// Filters events to only include events and not regular activities
 		if strings.Contains(strings.ToLower(summary), "[event]") && duration.Hours() <= 6 {
-			newEvent := Event{summary, int(start.Weekday()), start, duration, assoc, false, false}
+			newEvent := event{summary, int(start.Weekday()), start, duration, assoc, false, false}
 			returnEvents = append(returnEvents, newEvent)
 		}
 	}
 	if len(returnEvents) == 0 {
-		return make([]Event, 0)
+		return make([]event, 0)
 	}
 	// Handles event overlap
 	for index := range returnEvents[0 : len(returnEvents)-1] {
@@ -148,7 +148,7 @@ func GetEvents() []Event {
 	return returnEvents
 }
 
-func GetHTMLEvent(e Event) HTMLEvent {
+func getHTMLEvent(e event) htmlEvent {
 	var half string
 	if e.Half {
 		half = "half"
@@ -170,10 +170,10 @@ func GetHTMLEvent(e Event) HTMLEvent {
 		e.Assoc,
 		half,
 	)
-	return HTMLEvent{e.Summary, classes}
+	return htmlEvent{e.Summary, classes}
 }
 
-func FillTemplate(data TemplateData) {
+func fillTemplate(data templateData) {
 	t, err := template.New("template.go.tmpl").Funcs(template.FuncMap{
 		"Iterate": func(count int) []int {
 			var i int
@@ -197,8 +197,8 @@ func FillTemplate(data TemplateData) {
 	}
 }
 
-func MakeImage() {
-	imageName := fmt.Sprintf("Agenda_%s.png", WeekStart(time.Now()).Format("20060102"))
+func makeImage() {
+	imageName := fmt.Sprintf("Agenda_%s.png", weekStart(time.Now()).Format("20060102"))
 	log.Println("Creating image:", imageName)
 	ctx, cancel := chromedp.NewContext(
 		context.Background(),
@@ -231,7 +231,7 @@ func MakeImage() {
 		if err != nil {
 			log.Fatalf("Unable to add image to Redis DB: %v", err)
 		}
-		oldImageName := fmt.Sprintf("Agenda_%s.png", WeekStart(time.Now().AddDate(0, 0, -7)).Format("20060102"))
+		oldImageName := fmt.Sprintf("Agenda_%s.png", weekStart(time.Now().AddDate(0, 0, -7)).Format("20060102"))
 		err := os.Rename(imageName, "/app/images/"+imageName)
 		if err != nil {
 			log.Printf("Unable to rename new image: %v", err)
@@ -256,9 +256,10 @@ func MakeImage() {
 	}
 }
 
+// RefreshCalendar : Fetch the events for the current week and save the corresponding image
 func RefreshCalendar() {
-	var htmlEvents []HTMLEvent
-	events := GetEvents()
+	var htmlEvents []htmlEvent
+	events := getEvents()
 	if len(events) == 0 {
 		log.Printf("No events found")
 	}
@@ -271,13 +272,13 @@ func RefreshCalendar() {
 			item.Duration,
 			item.Assoc,
 		)
-		htmlEvents = append(htmlEvents, GetHTMLEvent(item))
+		htmlEvents = append(htmlEvents, getHTMLEvent(item))
 	}
-	data := TemplateData{
+	data := templateData{
 		htmlEvents,
 		int(time.Now().Weekday() - 1),
 		[]string{"Lun.", "Mar.", "Mer.", "Jeu.", "Ven."},
 	}
-	FillTemplate(data)
-	MakeImage()
+	fillTemplate(data)
+	makeImage()
 }
