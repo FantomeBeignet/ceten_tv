@@ -4,6 +4,8 @@ defaults:
     working-directory: calendar
 on:
   push:
+    branches:
+    - master
   pull_request:
   workflow_dispatch:
 env:
