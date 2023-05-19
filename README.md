@@ -1,5 +1,7 @@
 # CETEN TV
 
+[![Client Checks](https://github.com/FantomeBeignet/ceten_tv/actions/workflows/client.yml/badge.svg?branch=master)](https://github.com/FantomeBeignet/ceten_tv/actions/workflows/client.yml) [![Calendar Generator Checks](https://github.com/FantomeBeignet/ceten_tv/actions/workflows/calendar.yml/badge.svg?branch=master)](https://github.com/FantomeBeignet/ceten_tv/actions/workflows/calendar.yml)
+
 ## About
 
 CETEN TV is a web application made to display images on TELECOM Nancy's cafeteria TV.
