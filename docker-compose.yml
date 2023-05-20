@@ -11,6 +11,7 @@ services:
         - AUTH_SECRET=${AUTH_SECRET}
         - NEXTAUTH_URL=${NEXTAUTH_URL}
         - USER_WHITELIST=${USER_WHITELIST}
+        - REDIS_PASSWORD=${REDIS_PASSWORD}
     restart: unless-stopped
     volumes:
       - ./data/images:/app/images
