@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 services:
   client:
@@ -11,6 +11,7 @@ services:
         - AUTH_SECRET=${AUTH_SECRET}
         - NEXTAUTH_URL=${NEXTAUTH_URL}
         - USER_WHITELIST=${USER_WHITELIST}
+        - REDIS_PASSWORD=${REDIS_PASSWORD}
     restart: unless-stopped
     volumes:
       - ./data/images:/app/images
@@ -39,6 +40,17 @@ services:
       - ./data/logs:/app/logs
     environment:
       - CALENDAR_URL=${CALENDAR_URL}
+
+  scheduler:
+    build:
+      context: ./scheduler
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    volumes:
+      - ./data/images:/app/images
+      - ./data/logs:/app/logs
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
 
   redis:
     image: redis:alpine
