@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 services:
   client:
@@ -39,6 +39,17 @@ services:
       - ./data/logs:/app/logs
     environment:
       - CALENDAR_URL=${CALENDAR_URL}
+
+  scheduler:
+    build:
+      context: ./scheduler
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    volumes:
+      - ./data/images:/app/images
+      - ./data/logs:/app/logs
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
 
   redis:
     image: redis:alpine

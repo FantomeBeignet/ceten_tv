@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 services:
   client:
@@ -23,7 +23,7 @@ services:
       - ./client/node_modules:/app/node_modules
     ports:
       - 5173:5173
-    command: npm run dev -- --host 0.0.0.0 
+    command: npm run dev -- --host 0.0.0.0
     labels:
       # Enable Traefik
       - traefik.enable=true
@@ -57,6 +57,17 @@ services:
     volumes:
       - ./data/redis:/data
     command: redis-server --save 60 1 --appendonly yes --requirepass ${REDIS_PASSWORD}
+
+  scheduler:
+    build:
+      context: ./scheduler
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    volumes:
+      - ./data/images:/app/images
+      - ./data/logs:/app/logs
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
 
   traefik:
     image: traefik:latest
