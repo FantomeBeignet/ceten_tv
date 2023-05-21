@@ -1,6 +1,6 @@
 # CETEN TV
 
-[![Client Checks](https://github.com/FantomeBeignet/ceten_tv/actions/workflows/client.yml/badge.svg?branch=master)](https://github.com/FantomeBeignet/ceten_tv/actions/workflows/client.yml) [![Calendar Generator Checks](https://github.com/FantomeBeignet/ceten_tv/actions/workflows/calendar.yml/badge.svg?branch=master)](https://github.com/FantomeBeignet/ceten_tv/actions/workflows/calendar.yml) [![Scheduler Checks](https://github.com/FantomeBeignet/ceten_tv/actions/workflows/scheduler.yml/badge.svg)](https://github.com/FantomeBeignet/ceten_tv/actions/workflows/scheduler.yml)
+[![Client Checks](https://github.com/FantomeBeignet/ceten_tv/actions/workflows/client.yml/badge.svg?branch=master)](https://github.com/FantomeBeignet/ceten_tv/actions/workflows/client.yml) [![Calendar Generator Checks](https://github.com/FantomeBeignet/ceten_tv/actions/workflows/calendar.yml/badge.svg?branch=master)](https://github.com/FantomeBeignet/ceten_tv/actions/workflows/calendar.yml) [![API Checks](https://github.com/FantomeBeignet/ceten_tv/actions/workflows/api.yml/badge.svg)](https://github.com/FantomeBeignet/ceten_tv/actions/workflows/api.yml)
 
 ## About
 
