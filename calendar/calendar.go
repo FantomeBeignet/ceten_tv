@@ -227,10 +227,6 @@ func makeImage() {
 		if err != nil {
 			log.Fatalf("Unable to write file: %v", err)
 		}
-		_, err = addImage(imageName)
-		if err != nil {
-			log.Fatalf("Unable to add image to Redis DB: %v", err)
-		}
 		oldImageName := fmt.Sprintf("Agenda_%s.png", weekStart(time.Now().AddDate(0, 0, -7)).Format("20060102"))
 		err := os.Rename(imageName, "/app/images/"+imageName)
 		if err != nil {
@@ -241,10 +237,6 @@ func makeImage() {
 			err = os.Remove("agenda.html")
 			if err != nil {
 				log.Printf("Unable to remove file: %v", err)
-			}
-			_, err = removeImage(oldImageName)
-			if err != nil {
-				log.Printf("Unable to remove image from Redis DB: %v", err)
 			}
 		}
 		log.Println("Removing template file:", "agenda.html")
