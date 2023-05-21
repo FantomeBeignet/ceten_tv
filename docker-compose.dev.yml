@@ -40,6 +40,17 @@ services:
       - NEXTAUTH_URL_INTERNAL=http://localhost/
       - REDIS_PASSWORD=${REDIS_PASSWORD}
 
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    volumes:
+      - ./data/images:/app/images
+      - ./data/logs:/app/logs
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+
   calendar:
     build:
       context: ./calendar
@@ -57,17 +68,6 @@ services:
     volumes:
       - ./data/redis:/data
     command: redis-server --save 60 1 --appendonly yes --requirepass ${REDIS_PASSWORD}
-
-  scheduler:
-    build:
-      context: ./scheduler
-      dockerfile: Dockerfile
-    restart: unless-stopped
-    volumes:
-      - ./data/images:/app/images
-      - ./data/logs:/app/logs
-    environment:
-      - REDIS_PASSWORD=${REDIS_PASSWORD}
 
   traefik:
     image: traefik:latest

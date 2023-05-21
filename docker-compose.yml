@@ -30,6 +30,17 @@ services:
       - traefik.http.routers.client_https.service=client
       - traefik.http.routers.client_https.tls=true
 
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    volumes:
+      - ./data/images:/app/images
+      - ./data/logs:/app/logs
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+
   calendar:
     build:
       context: ./calendar
@@ -40,17 +51,6 @@ services:
       - ./data/logs:/app/logs
     environment:
       - CALENDAR_URL=${CALENDAR_URL}
-
-  scheduler:
-    build:
-      context: ./scheduler
-      dockerfile: Dockerfile
-    restart: unless-stopped
-    volumes:
-      - ./data/images:/app/images
-      - ./data/logs:/app/logs
-    environment:
-      - REDIS_PASSWORD=${REDIS_PASSWORD}
 
   redis:
     image: redis:alpine
