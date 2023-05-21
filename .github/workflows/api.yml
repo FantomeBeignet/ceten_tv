@@ -1,7 +1,7 @@
-name: Scheduler Checks
+name: API Checks
 defaults:
   run:
-    working-directory: scheduler
+    working-directory: api
 on:
   push:
     branches:
